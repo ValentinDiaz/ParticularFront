@@ -1,0 +1,41 @@
+<ion-header class="ion-padding header-content">
+  <h1 class="main-title">Encuentra tu profesor particular ideal</h1>
+  <p class="subtitle-text">
+    Conecta con profesores de Tandil. Clases personalizadas, horarios flexibles
+    y resultados garantizados.
+  </p>
+</ion-header>
+
+<ion-content>
+  <div class="buscar-profesor" (click)="irABuscarProfesor()">
+  <section>
+    <h2>🔍 Busca un profe</h2>
+  </section>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <section class="ranking-profesores">
+  <h2>🌟 Profesores mejor valorados</h2>
+  <ion-card *ngFor="let profe of mejoresProfesores">
+    <ion-card-header>
+      <ion-card-title>{{ profe.nombre }}</ion-card-title>
+      <ion-card-subtitle>{{ profe.materia }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      ⭐ {{ profe.puntuacion }} / 5 - {{ profe.cantidadOpiniones }} opiniones
+    </ion-card-content>
+  </ion-card>
+</section>
+
+</ion-content>
