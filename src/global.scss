@@ -38,14 +38,14 @@
 
 @import './theme/variables.scss';
 
-ion-app {
-  background: linear-gradient(135deg, #0d4d4d 0%, #b9c4c4 100%);;
+:root {
+  --ion-color-turquesa: #0d4d4d;
+  --ion-color-turquesa-rgb: 13, 77, 77;
+  --ion-color-turquesa-contrast: #ffffff;
+  --ion-color-turquesa-contrast-rgb: 255, 255, 255;
+  --ion-color-turquesa-shade: #0b4444;
+  --ion-color-turquesa-tint: #2e7878;
 }
-
-body, html {
-  background: linear-gradient(135deg, #0d4d4d 0%, #b9c4c4 100%); ;
-}
-
 
 
 

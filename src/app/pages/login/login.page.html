@@ -1,43 +1,61 @@
+<ion-content class="split-layout">
+  <div class="container">
+    <!-- Lado izquierdo - Logo -->
+    <div class="logo-section">
+      <div class="logo-content">
+        <img src="assets/imgs/logo.png" alt="Logo" class="logo-image" />
+        <h1 class="brand-name">Tu Empresa</h1>
+        <p class="brand-tagline">Bienvenido de vuelta</p>
+      </div>
+    </div>
 
-<ion-content class="centered-content ion-padding">
-<!-- login.component.html -->
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
-  <h2>Iniciar sesión</h2>
+    <!-- Lado derecho - Login -->
+    <div class="login-section">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+        <h2>Iniciar sesión</h2>
 
-  <div class="form-group">
-    <label for="email">Usuario</label>
-    <input
-      id="email"
-      formControlName="email"
-      type="text"
-      placeholder="Ingrese su email"
-      required
-    />
-    <small *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
-      email requerido
-    </small>
+        <div class="form-group">
+          <label for="email">Usuario</label>
+          <input
+            id="email"
+            formControlName="email"
+            type="text"
+            placeholder="Ingrese su email"
+            required
+          />
+
+          <small
+            *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            class="error"
+          >
+            Email requerido
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input
+            id="password"
+            formControlName="password"
+            type="password"
+            placeholder="Ingrese su contraseña"
+            required
+          />
+          <small
+            *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            class="error"
+          >
+            Contraseña requerida
+          </small>
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
+
+        <div class="forgot-password">
+          <a (click)="olvidePassword()">Registrate</a>
+          <a> ¿olvidaste tu contraseña?</a>
+        </div>
+      </form>
+    </div>
   </div>
-
-  <div class="form-group">
-    <label for="password">Contraseña</label>
-    <input
-      id="password"
-      formControlName="password"
-      type="password"
-      placeholder="Ingrese su contraseña"
-      required
-    />
-    <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
-      Contraseña requerida
-    </small>
-  </div>
-
-  <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
-
-  <div class="forgot-password">
-    <a href="#">¿Olvidaste tu contraseña?</a>
-  </div>
-</form>
-
-
 </ion-content>

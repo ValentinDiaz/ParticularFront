@@ -1,6 +1,6 @@
-import { Usuario } from "./usuario.interface";
+import { Usuario } from './usuario.interface';
 
 export interface LoginResponse {
-  token: string;
-  usuario: Usuario;
+  message: string;
+  user: Usuario;
 }

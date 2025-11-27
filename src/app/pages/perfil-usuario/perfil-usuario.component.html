@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Detalle del Usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if(usuario) {
+
+  <div class="usuario-card">
+
+    <div class="usuario-header">
+
+      @if(modoEdicion()){
+        <h1>Mi perfil (Editar)</h1>
+      }
+
+      <img
+        class="usuario-foto"
+        [src]="usuario.fotoPerfil || './assets/imgs/default-user.png'"
+        alt="Foto del usuario"
+      />
+
+      <h1 class="usuario-nombre">
+        {{ usuario.nombre }} {{ usuario.apellido }}
+      </h1>
+
+    </div>
+
+    <div class="info-grid">
+
+      <div class="info-item">
+        <div class="info-header">
+          <div class="info-icon"></div>
+          <div class="info-label">Email</div>
+        </div>
+        <div class="info-content">
+          {{ usuario.email }}
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-header">
+          <div class="info-icon"></div>
+          <div class="info-label">Teléfono</div>
+        </div>
+        <div class="info-content">
+          {{ usuario.telefono }}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="contact-actions">
+      <ion-button class="btn-secondary" [href]="'mailto:' + usuario.email">
+        📧 Email
+      </ion-button>
+    </div>
+
+  </div>
+
+  } @else {
+
+  <div class="loading-container">
+    <ion-spinner></ion-spinner>
+    <ion-text>Cargando usuario...</ion-text>
+  </div>
+
+  }
+</ion-content>

@@ -6,30 +6,40 @@ import { LoginResponse } from '../interfaces/login-response.interface';
 import { Usuario } from '../interfaces/usuario.interface';
 import { Materia } from '../interfaces/materia.interface';
 import { Nivel } from '../interfaces/nivel.interface';
+import { Area } from '../interfaces/area.interface';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MateriasService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {
-
-   }
-
-
-    private URL_BASE = 'http://localhost:3000/api/';
-    private URL_BASE_MATERIAS = 'http://localhost:3000/api/materias';
-        private URL_BASE_NIVELES = 'http://localhost:3000/api/niveles';
-
-
-
+  private URL_BASE = 'http://localhost:3000/api/';
+  private URL_BASE_MATERIAS = 'http://localhost:3000/api/materias';
+  private URL_BASE_NIVELES = 'http://localhost:3000/api/niveles';
+  private URL_BASE_AREA = 'http://localhost:3000/api/categorias';
 
   private endPoints = {
-
+    obtenerAreasPorNivel: '/nivel/',
+    obtenerMateriaPorArea: '/categoria/',
+    
   };
 
 
-   obtenerNivles (): Observable<Nivel[]> {
-    const url = this.URL_BASE
+  obtenerMateriaPorAreaYNivel(areaId: number, nivelId: number): Observable<Materia[]> {
+  const url = `${this.URL_BASE_MATERIAS}${this.endPoints.obtenerMateriaPorArea}${areaId}/nivel/${nivelId}`;
+  return this.http.get<Materia[]>(url, { withCredentials: true });
+}
+
+  obtenerAreasPorNivel(id: number): Observable<Area[]> {
+    const url = `${this.URL_BASE_AREA}${this.endPoints.obtenerAreasPorNivel}${id}`;
+    return this.http.get<Area[]>(url, {
+      withCredentials: true,
+    });
+  }
+  
+
+  obtenerNivles(): Observable<Nivel[]> {
+    const url = this.URL_BASE_NIVELES;
     const data = this.http.get<Nivel[]>(url, {
       withCredentials: true,
     });

@@ -1,4 +1,275 @@
 ion-content {
-    --background: linear-gradient(135deg, #0d4d4d 0%, #b9c4c4 100%);
-  padding: auto;
+  --background: white !important;
+  padding: 16px; /* o el valor que necesites */
+}
+
+
+
+
+/* Contenedor principal */
+.pantalla {
+  background: #0d4d4d;  
+  position: relative;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+ion-toolbar {
+  --background: none;
+  background: #0d4d4d;  
+  --color: white;
+  position: relative;
+  min-height: 56px;
+}
+
+
+
+
+/* Indicador de progreso */
+.nav-container {
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  position: relative;
+  gap: 15px;
+}
+
+/* Botón volver */
+.btn-volver {
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  color: white;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+
+
+
+/* Indicador de progreso */
+.progress-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+ 
+}
+
+.progress-indicator div {
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 25px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.progress-indicator div.active {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  transform: translateY(-2px);
+}
+
+.progress-indicator div:not(.active):hover {
+  color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+/* Tarjetas principales */
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 40px;
+  margin: 20px 0;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 1px 0px rgba(255, 255, 255, 0.2) inset;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: left 0.8s ease;
+}
+
+.card:hover::before {
+  left: 100%;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 1px 0px rgba(255, 255, 255, 0.2) inset;
+}
+
+/* Iconos */
+.icon {
+  font-size: 4rem;
+  color:  #0d4d4d;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.3));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Títulos */
+.card h2 {
+  color: #2d3436;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background:  #0d4d4d;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animaciones */
+.animate-fade {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .pantalla {
+    padding: 15px;
+  }
+  
+  .progress-indicator {
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px 15px;
+  }
+  
+  .progress-indicator div {
+    margin: 5px 0;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .card {
+    padding: 30px 20px;
+    margin: 15px 0;
+  }
+  
+  .card h2 {
+    font-size: 1.5rem;
+  }
+  
+  .icon {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 25px 15px;
+    border-radius: 15px;
+  }
+  
+  .card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  
+  .icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .progress-indicator div {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+}
+
+/* Efectos adicionales */
+.card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-indicator {
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos para elementos internos (componentes hijos) */
+app-niveles, 
+app-area, 
+app-materia, 
+app-profesores {
+  display: block;
+  width: 100%;
+}
+
+
+
+
+@media (max-width: 768px) {
+  ion-buttons[slot="start"] {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 10;
+  }
+
+
 }

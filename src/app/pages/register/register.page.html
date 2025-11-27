@@ -1,13 +1,115 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="split-layout">
+  <div class="diagonal-background"></div>
+  <div class="container">
+    <!-- Lado izquierdo - Logo -->
+    <div class="logo-section">
+      <div class="logo-content">
+        <img src="assets/logo.png" alt="Logo" class="logo-image" />
+        <h1 class="brand-name">Tu Empresa</h1>
+        <p class="brand-tagline">Crea tu cuenta</p>
+      </div>
+    </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- Lado derecho - Register -->
+    <div class="register-section">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+        <h2>Registro</h2>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="nombre">Nombre</label>
+            <input
+              id="nombre"
+              formControlName="nombre"
+              type="text"
+              placeholder="Ingrese su nombre"
+              required
+            />
+            <small *ngIf="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched" class="error">
+              Nombre requerido
+            </small>
+          </div>
+
+          <div class="form-group half">
+            <label for="apellido">Apellido</label>
+            <input
+              id="apellido"
+              formControlName="apellido"
+              type="text"
+              placeholder="Ingrese su apellido"
+              required
+            />
+            <small *ngIf="registerForm.get('apellido')?.invalid && registerForm.get('apellido')?.touched" class="error">
+              Apellido requerido
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            formControlName="email"
+            type="email"
+            placeholder="Ingrese su email"
+            required
+          />
+          <small *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
+            Email requerido
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input
+            id="telefono"
+            formControlName="telefono"
+            type="tel"
+            placeholder="Ingrese su teléfono"
+            required
+          />
+          <small *ngIf="registerForm.get('telefono')?.invalid && registerForm.get('telefono')?.touched" class="error">
+            Teléfono requerido
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input
+            id="password"
+            formControlName="password"
+            type="password"
+            placeholder="Ingrese su contraseña"
+            required
+          />
+          <small *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
+            Contraseña requerida
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmarPassword">Confirmar Contraseña</label>
+          <input
+            id="confirmarPassword"
+            formControlName="confirmarPassword"
+            type="password"
+            placeholder="Confirme su contraseña"
+            required
+          />
+          <small *ngIf="registerForm.get('confirmarPassword')?.invalid && registerForm.get('confirmarPassword')?.touched" class="error">
+            Confirmación requerida
+          </small>
+          <small *ngIf="registerForm.hasError('passwordMismatch') && registerForm.get('confirmarPassword')?.touched" class="error">
+            Las contraseñas no coinciden
+          </small>
+        </div>
+
+        <button type="submit" [disabled]="registerForm.invalid">Registrarse</button>
+
+        <div class="login-link">
+          <a href="/login">¿Ya tienes cuenta? Inicia sesión</a>
+        </div>
+      </form>
+    </div>
+  </div>
 </ion-content>

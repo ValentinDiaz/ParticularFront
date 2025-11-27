@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Detalle del Profesor</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if(profesor) {
+   
+  <div class="profesor-card">
+    
+    <div class="profesor-header">
+       @if(modoEdicion()){
+      <h1>es mi perfil para editar</h1>
+    }
+      <img
+        class="profesor-foto"
+        [src]="profesor.foto_url || './assets/imgs/default-user.png'"
+        alt="Foto del profesor"
+      />
+      <h1 class="profesor-nombre">
+        {{ profesor.nombre }} {{ profesor.apellido }}
+      </h1>
+
+      @if(profesor.precio_hora) {
+      <div class="precio-destacado">
+        💵 ${{ profesor.precio_hora }} por hora
+      </div>
+      }
+    </div>
+
+    <div class="info-grid">
+      @if(profesor.experiencia) {
+      <div class="info-item experiencia-item">
+        <div class="info-header">
+          <div class="info-icon"></div>
+          <div class="info-label">Experiencia y Datos</div>
+        </div>
+        <div class="info-content">{{ profesor.experiencia }}</div>
+      </div>
+      }
+
+      <!-- Repite para descripción, teléfono, email -->
+    </div>
+
+    <div class="contact-actions">
+      <ion-button
+        class="btn-primary"
+        (click)="enviarWhatsApp(profesor.telefono)"
+      >
+        <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+        Contactar por WhatsApp
+      </ion-button>
+      <ion-button class="btn-secondary" [href]="'mailto:' + profesor.email">
+        📧 Email
+      </ion-button>
+    </div>
+  </div>
+  } @else {
+  <div class="loading-container">
+    <ion-spinner></ion-spinner>
+    <ion-text>Cargando profesor...</ion-text>
+  </div>
+  }
+</ion-content>

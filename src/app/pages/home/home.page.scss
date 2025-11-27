@@ -1,54 +1,139 @@
 ion-content {
-    --background: linear-gradient(135deg, #0d4d4d 0%, #b9c4c4 100%);
+  --background: white;
   padding: auto;
 }
 
 .header-content {
+  background: #0d4d4d; // turquesa oscuro
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 200px;
   text-align: center;
+  padding: 20px 0;
 }
 
 .main-title {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   font-weight: bold;
-  margin-bottom: 12px;
-  color: white;
+  color: #ffffff;
+  margin-bottom: 10px;
 }
 
 .subtitle-text {
-  font-size: 1.2rem;
-  color: rgb(255, 255, 255);
+  font-size: 1.1rem;
+  color: #ffffff;
   margin: 0 20px;
 }
-.buscar-profesor {
-  max-width: 400px;     
-  max-height: 400px; 
-  margin: 20px auto;      
-  padding: 20px 30px;     
-  background-color: #f5f5f5; 
-  border-radius: 15px;    
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+.contenido-inicio {
+  --background: #ffffff;
 
-.buscar-profesor section h2 {
-  margin: 0;
-  font-weight: 600;
-  font-size: 1.8rem;
-  color: #333;
-}
+  .buscar-profesor {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 30px 20px 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 15px 35px rgba(255, 107, 107, 0.3);
+    position: relative;
+    overflow: hidden;
+    animation: float 3s ease-in-out infinite;
 
-.ranking-profesores {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
-  padding: 16px;
-  margin: 16px;
-  color: #ffffff;
-}
+    // Efecto shimmer/brillo deslizante
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: left 0.5s;
+    }
 
+    // Efectos hover
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(255, 107, 107, 0.4);
+
+      &::before {
+        left: 100%;
+      }
+    }
+
+    // Estilos del texto
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      margin: 0;
+      color: white;
+    }
+  }
+
+  // Animación de flotación
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  // Responsive para móviles
+  @media (max-width: 768px) {
+    .buscar-profesor {
+      margin: 20px 15px 30px 15px;
+      padding: 25px 20px;
+
+      h2 {
+        font-size: 1.8rem;
+      }
+    }
+  }
+
+  // Accesibilidad - focus
+  .buscar-profesor:focus {
+    outline: 3px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+  }
+
+  .seccion-titulo {
+    color: #0d4d4d;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 1rem 1rem 0.5rem;
+  }
+
+  .ranking-profesores {
+    padding: 0 1rem;
+  }
+
+  .profe-card {
+    margin-bottom: 1rem;
+    border-left: 5px solid #0d4d4d;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+    ion-card-title {
+      color: #0d4d4d;
+      font-weight: bold;
+    }
+
+    ion-card-subtitle {
+      color: #555;
+    }
+
+    ion-card-content {
+      font-size: 0.9rem;
+      color: #333;
+    }
+  }
+}
