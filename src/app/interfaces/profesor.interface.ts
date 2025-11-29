@@ -10,5 +10,5 @@ export interface Profesor {
   telefono:number;
   experiencia:string;
   materias:Materia[];
-  usuario_id:number;
+  id_usuario:number;
 }

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-back-button slot="start"></ion-back-button>
+    <ion-back-button slot="start" defaultHref="/home"></ion-back-button>
     <ion-title>Detalle del Usuario</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,11 +9,9 @@
   @if(usuario) {
 
   <div class="usuario-card">
-
     <div class="usuario-header">
-
       @if(modoEdicion()){
-        <h1>Mi perfil (Editar)</h1>
+      <h1>Mi perfil (Editar)</h1>
       }
 
       <img
@@ -25,11 +23,9 @@
       <h1 class="usuario-nombre">
         {{ usuario.nombre }} {{ usuario.apellido }}
       </h1>
-
     </div>
 
     <div class="info-grid">
-
       <div class="info-item">
         <div class="info-header">
           <div class="info-icon"></div>
@@ -49,7 +45,6 @@
           {{ usuario.telefono }}
         </div>
       </div>
-
     </div>
 
     <div class="contact-actions">
@@ -57,7 +52,6 @@
         📧 Email
       </ion-button>
     </div>
-
   </div>
 
   } @else {

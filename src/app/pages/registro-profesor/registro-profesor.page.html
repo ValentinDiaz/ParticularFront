@@ -1,13 +1,138 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>registroProfesor</ion-title>
+    <ion-back-button slot="start" defaultHref="/home"></ion-back-button>
+    <ion-title>Registro profesor</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">registroProfesor</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="split-layout">
+  <div class="diagonal-background"></div>
+  <div class="container">
+    <!-- Lado izquierdo - Logo -->
+    <div class="logo-section">
+      <div class="logo-content">
+        <img src="assets/imgs/logo.png" alt="Logo" class="logo-image" />
+        <h1 class="brand-name">Tu Empresa</h1>
+        <p class="brand-tagline">Únete como profesor</p>
+      </div>
+    </div>
+
+    <!-- Lado derecho - Register Profesor -->
+    <div class="register-section">
+      <form [formGroup]="profesorForm" (ngSubmit)="onSubmit()" novalidate>
+        <h2>Registro de Profesor</h2>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input
+            id="telefono"
+            formControlName="telefono"
+            type="tel"
+            placeholder="Ingrese su teléfono"
+            required
+          />
+          <small
+            *ngIf="profesorForm.get('telefono')?.invalid && profesorForm.get('telefono')?.touched"
+            class="error"
+          >
+            Teléfono requerido
+          </small>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="precio_hora">Precio por Hora ($)</label>
+            <input
+              id="precio_hora"
+              formControlName="precio_hora"
+              type="number"
+              placeholder="Ej: 5000"
+              required
+            />
+            <small
+              *ngIf="profesorForm.get('precio_hora')?.invalid && profesorForm.get('precio_hora')?.touched"
+              class="error"
+            >
+              Precio requerido
+            </small>
+          </div>
+
+          <div class="form-group half">
+            <label for="foto_url">URL de Foto</label>
+            <input
+              id="foto_url"
+              formControlName="foto_url"
+              type="text"
+              placeholder="URL de su foto"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="experiencia">Experiencia</label>
+          <textarea
+            id="experiencia"
+            formControlName="experiencia"
+            rows="3"
+            placeholder="Cuéntanos sobre tu experiencia como profesor..."
+            required
+          ></textarea>
+          <small
+            *ngIf="profesorForm.get('experiencia')?.invalid && profesorForm.get('experiencia')?.touched"
+            class="error"
+          >
+            Experiencia requerida
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="materias">Materias que dictas</label>
+          <div class="materias-selector">
+            <ion-select
+              id="materias"
+              formControlName="materias"
+              multiple="true"
+              placeholder="Selecciona las materias"
+              interface="action-sheet"
+              [interfaceOptions]="customActionSheetOptions"
+            >
+              <ion-select-option
+                *ngFor="let materia of materiasDisponibles"
+                [value]="materia.id"
+              >
+                {{ materia.nombre }}
+              </ion-select-option>
+            </ion-select>
+          </div>
+          <small
+            *ngIf="profesorForm.get('materias')?.invalid && profesorForm.get('materias')?.touched"
+            class="error"
+          >
+            Debes seleccionar al menos una materia
+          </small>
+
+          <!-- Chips para mostrar las materias seleccionadas -->
+          <div
+            class="selected-materias"
+            *ngIf="getSelectedMaterias().length > 0"
+          >
+            <ion-chip
+              *ngFor="let materia of getSelectedMaterias()"
+              color="primary"
+            >
+              <ion-label>{{ materia.nombre }}</ion-label>
+              <ion-icon
+                name="close-circle"
+                (click)="removeMateria(materia.id)"
+              ></ion-icon>
+            </ion-chip>
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="profesorForm.invalid || isLoading">
+          {{ isLoading ? 'Registrando...' : 'Registrarse como Profesor' }}
+        </button>
+      </form>
+    </div>
+  </div>
 </ion-content>

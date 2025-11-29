@@ -1,7 +1,9 @@
+import { RegistroProfesorPage } from './../pages/registro-profesor/registro-profesor.page';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Profesor } from '../interfaces/profesor.interface';
+import { ProfesorRequest } from '../interfaces/profesor-request.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +16,26 @@ export class ProfesoresService {
   private endPoints = {
     obtenerProfesorPorMateria: '/materia/',
     obternerProfesorPorUsuario: '/usuario/',
+    resgistarProfesor: '/registroProfesor',
   };
+
+
+
+  actualizarProfesor(
+    id: number,
+    profesorData: Partial<ProfesorRequest>
+  ): Observable<ProfesorRequest> {
+    const url = `${this.URL_BASE}/${id}`;
+    return this.http.put<ProfesorRequest>(url, profesorData, {
+      withCredentials: true,
+    });
+  }
+
+
+
+
+
+
 
   obtenerProfesorPorId(id: number): Observable<Profesor> {
     const url = `${this.URL_BASE}/${id}`;
@@ -35,4 +56,15 @@ export class ProfesoresService {
     const url = `${this.URL_BASE}${this.endPoints.obtenerProfesorPorMateria}${id}?page=${page}&limit=${limit}`;
     return this.http.get<Profesor[]>(url, { withCredentials: true });
   }
+
+
+
+
+
+  registrarProfesor(profesorData: ProfesorRequest): Observable<ProfesorRequest> {
+    const url = `${this.URL_BASE}`;
+    return this.http.post<ProfesorRequest>(url, profesorData, {
+      withCredentials: true,
+    });
+  } 
 }

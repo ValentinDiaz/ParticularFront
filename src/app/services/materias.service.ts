@@ -36,6 +36,13 @@ export class MateriasService {
       withCredentials: true,
     });
   }
+
+  // Obtener materias
+  obtenerTodasMaterias(): Observable<Materia[]> {
+    return this.http.get<Materia[]>(this.URL_BASE_MATERIAS, {
+      withCredentials: true,
+    });
+  }
   
 
   obtenerNivles(): Observable<Nivel[]> {

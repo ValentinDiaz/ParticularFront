@@ -128,7 +128,6 @@ label {
     font-size: 14px;
     margin-bottom: 8px;
     font-weight: 500;
-    opacity: 0.95;
 }
 
 input[type="text"],
@@ -144,11 +143,16 @@ input[type="password"] {
     outline: none;
 }
 
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="password"]::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
 
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-    border-color: #4dd0e1;
     background: rgba(255, 255, 255, 0.15);
     box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.2),
                 0 0 15px rgba(77, 208, 225, 0.4);
@@ -166,7 +170,6 @@ button[type="submit"] {
     padding: 16px;
     background: linear-gradient(45deg, #26a69a, #4dd0e1);
     color: #ffffff;
-    border: 2px solid #4dd0e1;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
@@ -182,7 +185,6 @@ button[type="submit"] {
 button[type="submit"]:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(77, 208, 225, 0.5);
-    border-color: #26a69a;
 }
 
 button[type="submit"]:disabled {

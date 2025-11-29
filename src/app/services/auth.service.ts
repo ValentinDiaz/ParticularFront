@@ -140,12 +140,7 @@ export class AuthService {
     );
   }
 
-  // Obtener materias
-  obtenerTodasMaterias(): Observable<Materia[]> {
-    return this.http.get<Materia[]>(this.URL_BASE_MATERIAS, {
-      withCredentials: true,
-    });
-  }
+  
 
   // Verificar si está logueado
   isLogged(): boolean {
