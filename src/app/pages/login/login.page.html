@@ -1,4 +1,5 @@
 <ion-content class="split-layout">
+  <div class="diagonal-background"></div>
   <div class="container">
     <!-- Lado izquierdo - Logo -->
     <div class="logo-section">
@@ -23,7 +24,6 @@
             placeholder="Ingrese su email"
             required
           />
-
           <small
             *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
             class="error"
@@ -52,8 +52,7 @@
         <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
 
         <div class="forgot-password">
-          <a (click)="olvidePassword()">Registrate</a>
-          <a> ¿olvidaste tu contraseña?</a>
+          <a href="#">¿Olvidaste tu contraseña?</a>
         </div>
       </form>
     </div>
