@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <!-- Indicador de progreso -->
+    <div class="progress-indicator">
+      <!-- Botón volver -->
+      <ion-buttons *ngIf="nivelSeleccionado">
+        <ion-button (click)="volverPaso()" class="btn-volver">
+          ⬅ Volver
+        </ion-button>
+      </ion-buttons>
+      <div
+        [class.active]="nivelSeleccionado"
+        [title]="nivelSeleccionado?.nombre"
+      >
+        {{ nivelSeleccionado?.nombre || 'Nivel' }}
+      </div>
+      <div [class.active]="areaSeleccionada" [title]="areaSeleccionada?.nombre">
+        {{ areaSeleccionada?.nombre || 'Área' }}
+      </div>
+      <div
+        [class.active]="materiaSeleccionada"
+        [title]="materiaSeleccionada?.nombre"
+      >
+        {{ materiaSeleccionada?.nombre || 'Materia' }}
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+ 
+    <!-- Paso 1: Niveles -->
+    <div class="card animate-fade" *ngIf="!nivelSeleccionado">
+      <ion-icon name="school-outline" class="icon"></ion-icon>
+      <h2>Seleccioná un nivel</h2>
+      <app-niveles [(nivelSeleccionado)]="nivelSeleccionado"></app-niveles>
+    </div>
+
+    <!-- Paso 2: Área -->
+    <div
+      class="card animate-fade"
+      *ngIf="nivelSeleccionado && !areaSeleccionada"
+    >
+      <ion-icon name="layers-outline" class="icon"></ion-icon>
+      <h2>Seleccioná un área</h2>
+      <app-area
+        [nivelSeleccionado]="nivelSeleccionado"
+        (areaSeleccionadaChanges)="areaSeleccionada = $event"
+      ></app-area>
+    </div>
+
+    <!-- Paso 3: Materia -->
+    <div
+      class="card animate-fade"
+      *ngIf="areaSeleccionada && !materiaSeleccionada"
+    >
+      <ion-icon name="book-outline" class="icon"></ion-icon>
+      <h2>Seleccioná una materia</h2>
+      <app-materia
+        [nivelSeleccionado]="nivelSeleccionado"
+        [areaSeleccionada]="areaSeleccionada"
+        [(materiaSeleccionada)]="materiaSeleccionada"
+      ></app-materia>
+    </div>
+
+    <!-- Paso final: Profesores -->
+    <div class="card animate-fade" *ngIf="materiaSeleccionada">
+      <ion-icon name="people-outline" class="icon"></ion-icon>
+      <h2>Profesores disponibles</h2>
+      <app-profesores
+        [materiaSeleccionada]="materiaSeleccionada"
+      ></app-profesores>
+    </div>
+</ion-content>

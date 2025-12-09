@@ -1,0 +1,56 @@
+<ion-grid>
+  <ion-row class="ion-justify-content-center">
+    @for(profesor of profesores; track profesor.id) {
+    <ion-col size="12" size-md="6" size-lg="4">
+      <ion-card
+        class="profesor-card"
+        (click)="seleccionarProfesor(profesor)"
+        button
+      >
+        <div class="profesor-foto-wrapper">
+          <img
+            [src]="profesor.foto || './assets/imgs/default-user.png'"
+            class="profesor-foto"
+            [alt]="'Foto de ' + profesor.nombre"
+          />
+          <div class="profesor-overlay">
+            <h2>{{ profesor.nombre }} {{ profesor.apellido }}</h2>
+            @if(profesor.experiencia) {
+            <div class="experiencia">
+              <ion-icon name="school-outline" color="light"></ion-icon>
+              <span>{{ profesor.experiencia }}</span>
+            </div>
+            }
+          </div>
+        </div>
+
+        <ion-card-content class="profesor-content">
+          <div class="materias-section">
+            <ion-icon name="book-outline" color="medium"></ion-icon>
+            <span>{{ obtenerNombresMaterias(profesor) }}</span>
+          </div>
+
+          <div class="profesor-footer">
+            @if(profesor.precio_hora) {
+            <div class="precio">
+              <span class="precio-valor">${{ profesor.precio_hora }}</span>
+              <span class="precio-unidad">/hora</span>
+            </div>
+            }
+
+            <ion-button fill="clear" size="small" class="contactar-btn">
+              <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
+              Contactar
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    } @empty {
+    <ion-col size="12" class="ion-text-center empty-state">
+      <ion-icon name="school-outline" size="large" color="medium"></ion-icon>
+      <p>No se encontraron profesores para esta materia en este momento.</p>
+    </ion-col>
+    }
+  </ion-row>
+</ion-grid>

@@ -1,0 +1,338 @@
+ion-content {
+  --background: #fafafa;
+}
+
+ion-header ion-toolbar {
+  --background: #0d4d4d;
+  --color: #ffffff;
+}
+
+ion-title {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+ion-back-button {
+  --color: #ffffff;
+}
+
+ion-toolbar ion-button {
+  --color: #ffffff;
+}
+
+/* Contenedor principal */
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #ffffff;
+  min-height: 100%;
+}
+
+/* Header con foto de fondo */
+.profile-header {
+  position: relative;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  background-color: #0d4d4d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 2rem 1.5rem;
+  overflow: hidden;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 77, 77, 0.3) 0%,
+    rgba(13, 77, 77, 0.7) 70%,
+    rgba(13, 77, 77, 0.95) 100%
+  );
+  z-index: 1;
+}
+
+.edit-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(77, 208, 225, 0.95);
+  color: #0d4d4d;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 2;
+  backdrop-filter: blur(10px);
+}
+
+.photo-edit-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  color: #0d4d4d;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.photo-edit-btn:active {
+  transform: scale(0.95);
+}
+
+.photo-edit-btn ion-icon {
+  font-size: 1.3rem;
+}
+
+.profile-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+  text-align: center;
+  z-index: 2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Contenido */
+.profile-content {
+  padding: 2rem 1.5rem;
+}
+
+.info-section {
+  margin-bottom: 2rem;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #0d4d4d;
+}
+
+.section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #0d4d4d;
+}
+
+.edit-icon {
+  font-size: 1.3rem;
+  color: #0d4d4d;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.edit-icon:hover {
+  color: #4dd0e1;
+}
+
+.section-text {
+  color: #555;
+  line-height: 1.7;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.section-text.secondary {
+  color: #999;
+}
+
+/* Info de contacto */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #555;
+  font-size: 1rem;
+}
+
+.contact-item ion-icon {
+  font-size: 1.3rem;
+  color: #0d4d4d;
+}
+
+/* Formularios de edición */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #0d4d4d;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: flex-end;
+}
+
+.btn-cancel,
+.btn-save {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+.btn-save {
+  background: #0d4d4d;
+  color: #ffffff;
+}
+
+.btn-save:hover {
+  background: #1a6666;
+}
+
+/* Botones de acción */
+.profile-actions {
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  background: #fafafa;
+  border-top: 1px solid #e0e0e0;
+}
+
+.action-btn {
+  flex: 1;
+  height: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+
+.action-btn.secondary {
+  --background: #ee5a24;
+  --background-activated: #d84315;
+  --color: #ffffff;
+}
+
+.action-btn ion-icon {
+  font-size: 1.2rem;
+}
+
+/* Estado de carga */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 1rem;
+}
+
+.loading-state p {
+  color: #999;
+  font-size: 1rem;
+}
+
+.loading-state ion-spinner {
+  --color: #0d4d4d;
+  width: 40px;
+  height: 40px;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .profile-header {
+    height: 350px;
+  }
+
+  .profile-name {
+    font-size: 2.5rem;
+  }
+
+  .profile-content {
+    padding: 2.5rem 2rem;
+  }
+
+  .profile-actions {
+    padding: 2rem;
+  }
+}
+
+/* Animación de entrada */
+.profile-container {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

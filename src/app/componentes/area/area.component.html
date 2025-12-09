@@ -1,0 +1,18 @@
+
+<ion-grid>
+  <ion-row class="ion-justify-content-center">
+    @for(area of areas; track area.nombre) {
+    <ion-col size="6" size-md="4" size-lg="3">
+      <ion-card (click)="seleccionarArea(area)" class="nivel-card">
+        <ion-card-content class="ion-text-center">
+          <h3>{{ area.nombre }}</h3>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    } @empty {
+    <ion-col size="12" class="ion-text-center">
+      <p>No hay niveles para mostrar</p>
+    </ion-col>
+    }
+  </ion-row>
+</ion-grid>

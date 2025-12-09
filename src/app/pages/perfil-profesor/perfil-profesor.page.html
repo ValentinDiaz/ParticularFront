@@ -1,0 +1,242 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start" defaultHref="/home"></ion-back-button>
+    <ion-title
+      >{{ modoEdicion() ? 'Mi Perfil' : 'Perfil del Profesor' }}</ion-title
+    >
+    @if(modoEdicion()) {
+    <ion-button
+      slot="end"
+      fill="clear"
+      (click)="guardarCambios()"
+      [disabled]="!haycambios"
+    >
+      <ion-icon
+        name="checkmark-circle-outline"
+        style="font-size: 1.5rem"
+      ></ion-icon>
+    </ion-button>
+    }
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if(profesor) {
+
+  <div class="profile-container">
+    <!-- Header con foto de fondo -->
+    <div
+      class="profile-header"
+      [style.background-image]="'url(' + (profesor.foto || './assets/imgs/default-user.png') + ')'"
+    >
+      @if(modoEdicion()) {
+      <div class="edit-badge">✏️ Mi Perfil</div>
+      <button class="photo-edit-btn" (click)="editarFoto()">
+        <ion-icon name="camera"></ion-icon>
+      </button>
+      }
+
+      <h1 class="profile-name">
+        {{ profesor.nombre }} {{ profesor.apellido }}
+      </h1>
+
+      <div class="rating-section">
+        <div class="stars">
+          <ion-icon
+            *ngFor="let star of [1,2,3,4,5]"
+            [name]="star <= ratingSeleccionado ? 'star' : 'star-outline'"
+            (click)="seleccionarRating(star)"
+            class="star"
+          ></ion-icon>
+
+          <span class="rating-value"> {{ ratingSeleccionado }}/5 </span>
+        </div>
+
+        <span class="rating-value">
+          {{ profesor.rating_promedio | number:'1.1-1' }}/5
+        </span>
+
+        @if (profesor.cantidad_calificacione > 0) {
+        <span class="reviews-count">
+          ({{ profesor.cantidad_calificacione }} reseñas)
+        </span>
+        }
+      </div>
+
+      @if(profesor.precio_hora) {
+      <div class="profile-price">
+        @if(!editandoPrecio) {
+        <span (click)="modoEdicion() && editarPrecio()"
+          >${{ profesor.precio_hora }}/hora</span
+        >
+        @if(modoEdicion()) {
+        <ion-icon name="pencil" class="edit-icon-inline"></ion-icon>
+        } } @else {
+        <input
+          type="number"
+          [(ngModel)]="profesor.precio_hora"
+          (blur)="editandoPrecio = false"
+          (keyup.enter)="editandoPrecio = false"
+          class="price-input"
+          autofocus
+        />
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Contenido -->
+    <div class="profile-content">
+      <!-- Experiencia -->
+      @if(profesor.experiencia || modoEdicion()) {
+      <div class="info-section">
+        <div class="section-header">
+          <div class="section-title">Sobre mí</div>
+          @if(modoEdicion() && !editandoExperiencia) {
+          <ion-icon
+            name="pencil"
+            class="edit-icon"
+            (click)="editarExperiencia()"
+          ></ion-icon>
+          }
+        </div>
+
+        @if(!editandoExperiencia) {
+        <p class="section-text">
+          {{ profesor.experiencia || 'Sin descripción' }}
+        </p>
+        } @else {
+        <textarea
+          [(ngModel)]="profesor.experiencia"
+          class="edit-textarea"
+          rows="4"
+          placeholder="Cuéntanos sobre tu experiencia..."
+        ></textarea>
+        <div class="edit-actions">
+          <button class="btn-cancel" (click)="cancelarEdicionExperiencia()">
+            Cancelar
+          </button>
+          <button class="btn-save" (click)="guardarExperiencia()">
+            Guardar
+          </button>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Materias -->
+      @if((profesor.materias && profesor.materias.length > 0) || modoEdicion())
+      {
+      <div class="info-section">
+        <div class="section-header">
+          <div class="section-title">Materias</div>
+          @if(modoEdicion()) {
+          <ion-icon
+            name="add-circle"
+            class="edit-icon"
+            (click)="agregarMateria()"
+          ></ion-icon>
+          }
+        </div>
+
+        <div class="tags">
+          @for(materia of profesor.materias; track materia.id) {
+          <span class="tag">
+            {{ materia.nombre }} @if(modoEdicion()) {
+            <ion-icon
+              name="close-circle"
+              class="remove-tag"
+              (click)="eliminarMateria(materia.id)"
+            ></ion-icon>
+            }
+          </span>
+          } @if(!profesor.materias || profesor.materias.length === 0) {
+          <p class="empty-text">No hay materias agregadas</p>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- Datos de contacto -->
+      <div class="info-section">
+        <div class="section-header">
+          <div class="section-title">Contacto</div>
+          @if(modoEdicion() && !editandoContacto) {
+          <ion-icon
+            name="pencil"
+            class="edit-icon"
+            (click)="editarContacto()"
+          ></ion-icon>
+          }
+        </div>
+
+        @if(!editandoContacto) {
+        <div class="contact-info">
+          <div class="contact-item">
+            <ion-icon name="call-outline"></ion-icon>
+            <span>{{ profesor.telefono }}</span>
+          </div>
+          <div class="contact-item">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span>{{ profesor.email }}</span>
+          </div>
+        </div>
+        } @else {
+        <div class="edit-contact">
+          <div class="input-group">
+            <label>Teléfono</label>
+            <input
+              type="tel"
+              [(ngModel)]="profesor.telefono"
+              class="edit-input"
+            />
+          </div>
+          <div class="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              [(ngModel)]="profesor.email"
+              class="edit-input"
+            />
+          </div>
+          <div class="edit-actions">
+            <button class="btn-cancel" (click)="cancelarEdicionContacto()">
+              Cancelar
+            </button>
+            <button class="btn-save" (click)="guardarContacto()">
+              Guardar
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    @if(!modoEdicion()) {
+    <div class="profile-actions">
+      <ion-button
+        class="action-btn primary"
+        (click)="enviarWhatsApp(profesor.telefono)"
+      >
+        <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+        WhatsApp
+      </ion-button>
+      <ion-button
+        class="action-btn secondary"
+        [href]="'mailto:' + profesor.email"
+      >
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        Email
+      </ion-button>
+    </div>
+    }
+  </div>
+
+  } @else {
+  <div class="loading-state">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando...</p>
+  </div>
+  }
+</ion-content>

@@ -1,0 +1,29 @@
+.materia-card {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2rem;
+  background: #0d4d4d;/* Turquesa */
+  box-shadow: 0 6px 20px rgba(0, 198, 162, 0.3); /* Sombra turquesa */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  color: white;
+  text-align: center;
+}
+
+.materia-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.materia-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 198, 162, 0.5);
+}
+
+.mensaje-vacio{
+  color: #0d4d4d;
+}

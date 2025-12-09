@@ -1,0 +1,139 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start" defaultHref="/home"></ion-back-button>
+    <ion-title>{{ modoEdicion() ? 'Mi Perfil' : 'Perfil del Usuario' }}</ion-title>
+    @if(modoEdicion()) {
+    <ion-button slot="end" fill="clear" (click)="guardarCambios()" [disabled]="!haycambios">
+      <ion-icon name="checkmark-circle-outline" style="font-size: 1.5rem;"></ion-icon>
+    </ion-button>
+    }
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if(usuario) {
+  
+  <div class="profile-container">
+    <!-- Header con foto de fondo -->
+    <div class="profile-header" [style.background-image]="'url(' + (usuario.fotoPerfil || './assets/imgs/default-user.png') + ')'">
+      @if(modoEdicion()) {
+      <div class="edit-badge">✏️ Mi Perfil</div>
+      <button class="photo-edit-btn" (click)="editarFoto()">
+        <ion-icon name="camera"></ion-icon>
+      </button>
+      }
+      
+      <h1 class="profile-name">{{ usuario.nombre }} {{ usuario.apellido }}</h1>
+    </div>
+
+    <!-- Contenido -->
+    <div class="profile-content">
+      
+      <!-- Nombre y Apellido -->
+      <div class="info-section">
+        <div class="section-header">
+          <div class="section-title">Nombre Completo</div>
+          @if(modoEdicion() && !editandoNombre) {
+          <ion-icon name="create-outline" class="edit-icon" (click)="editarNombre()"></ion-icon>
+          }
+        </div>
+        
+        @if(!editandoNombre) {
+        <p class="section-text">{{ usuario.nombre }} {{ usuario.apellido }}</p>
+        } @else {
+        <div class="edit-form">
+          <div class="input-group">
+            <label>Nombre</label>
+            <input type="text" [(ngModel)]="usuario.nombre" class="edit-input" />
+          </div>
+          <div class="input-group">
+            <label>Apellido</label>
+            <input type="text" [(ngModel)]="usuario.apellido" class="edit-input" />
+          </div>
+          <div class="edit-actions">
+            <button class="btn-cancel" (click)="cancelarEdicionNombre()">Cancelar</button>
+            <button class="btn-save" (click)="guardarNombre()">Guardar</button>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="info-section">
+        <div class="section-header">
+          <div class="section-title">Email</div>
+          @if(modoEdicion() && !editandoEmail) {
+          <ion-icon name="create-outline" class="edit-icon" (click)="editarEmail()"></ion-icon>
+          }
+        </div>
+        
+        @if(!editandoEmail) {
+        <div class="contact-info">
+          <div class="contact-item">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span>{{ usuario.email }}</span>
+          </div>
+        </div>
+        } @else {
+        <div class="edit-form">
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="usuario.email" class="edit-input" />
+          </div>
+          <div class="edit-actions">
+            <button class="btn-cancel" (click)="cancelarEdicionEmail()">Cancelar</button>
+            <button class="btn-save" (click)="guardarEmail()">Guardar</button>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Teléfono -->
+      <div class="info-section">
+        <div class="section-header">
+          <div class="section-title">Teléfono</div>
+          @if(modoEdicion() && !editandoTelefono) {
+          <ion-icon name="create-outline" class="edit-icon" (click)="editarTelefono()"></ion-icon>
+          }
+        </div>
+        
+        @if(!editandoTelefono) {
+        <div class="contact-info">
+          <div class="contact-item">
+            <ion-icon name="call-outline"></ion-icon>
+            <span>{{ usuario.telefono || 'No especificado' }}</span>
+          </div>
+        </div>
+        } @else {
+        <div class="edit-form">
+          <div class="input-group">
+            <label>Teléfono</label>
+            <input type="tel" [(ngModel)]="usuario.telefono" class="edit-input" placeholder="Ingrese su teléfono" />
+          </div>
+          <div class="edit-actions">
+            <button class="btn-cancel" (click)="cancelarEdicionTelefono()">Cancelar</button>
+            <button class="btn-save" (click)="guardarTelefono()">Guardar</button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    @if(!modoEdicion()) {
+    <div class="profile-actions">
+      <ion-button class="action-btn secondary" [href]="'mailto:' + usuario.email">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        Enviar Email
+      </ion-button>
+    </div>
+    }
+  </div>
+
+  } @else {
+  <div class="loading-state">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando...</p>
+  </div>
+  }
+</ion-content>

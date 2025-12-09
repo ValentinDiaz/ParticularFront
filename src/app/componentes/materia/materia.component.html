@@ -1,0 +1,20 @@
+<div class="contenedor-materias">
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      @for(materia of materias; track materia.id) {
+        <ion-col size="6" size-md="4" size-lg="3">
+          <ion-card   (click)="seleccionarMateria(materia)" class="materia-card">
+            <ion-card-content class="ion-text-center">
+              <h3>{{ materia.nombre }}</h3>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      }
+      @empty {
+        <ion-col size="12" class="ion-text-center">
+          <p class="mensaje-vacio">No hay materias disponibles para esta área.</p>
+        </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
+</div>
