@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 2rem;
-  background: #0d4d4d;/* Turquesa */
+  background: #0d4d4d; /* Turquesa */
   color: white;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -12,6 +12,9 @@
   ion-card-content {
     text-align: center;
     padding: 20px;
+  }
+  p {
+    color: #0d4d4d;
   }
 
   h3 {

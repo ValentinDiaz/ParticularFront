@@ -9,7 +9,7 @@
       >
         <div class="profesor-foto-wrapper">
           <img
-            [src]="profesor.foto_url || './assets/imgs/default-user.png'"
+            [src]="profesor.foto || './assets/imgs/default-user.png'"
             class="profesor-foto"
             [alt]="'Foto de ' + profesor.nombre"
           />

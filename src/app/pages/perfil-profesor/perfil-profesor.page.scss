@@ -50,12 +50,6 @@ ion-toolbar ion-button {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(13, 77, 77, 0.3) 0%,
-    rgba(13, 77, 77, 0.7) 70%,
-    rgba(13, 77, 77, 0.95) 100%
-  );
   z-index: 1;
 }
 
@@ -331,8 +325,6 @@ ion-toolbar ion-button {
   font-size: 1rem;
 }
 
-
-
 .contact-item ion-icon {
   font-size: 1.3rem;
   color: #0d4d4d;
@@ -392,6 +384,44 @@ ion-toolbar ion-button {
   --color: #0d4d4d;
   width: 40px;
   height: 40px;
+}
+
+.rating-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+  z-index: 2;
+}
+
+.stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.stars ion-icon {
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stars ion-icon.filled {
+  color: #ffd700;
+  text-shadow: 0 2px 6px rgba(255, 215, 0, 0.5);
+}
+
+.rating-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.reviews-count {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Responsive */

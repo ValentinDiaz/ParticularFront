@@ -265,23 +265,24 @@ ion-select::part(icon) {
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 8px;
+  color:#0d4d4d ;
 }
 
 ion-chip {
   --background: rgba(77, 208, 225, 0.2);
-  --color: #4dd0e1;
+  color:#e5e7e7 ;
   border: 1px solid #4dd0e1;
   height: 28px;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 ion-chip ion-icon {
   cursor: pointer;
-  color: #4dd0e1;
+  color: #f5f8f8;
 }
 
 ion-chip ion-icon:hover {
-  color: #26a69a;
+  color: #f0f1f1;
 }
 
 .error {

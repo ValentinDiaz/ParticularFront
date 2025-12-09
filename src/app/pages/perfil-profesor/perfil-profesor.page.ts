@@ -23,7 +23,7 @@ import {
   ActionSheetController,
   LoadingController,
 } from '@ionic/angular/standalone';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProfesoresService } from 'src/app/services/profesores.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Profesor } from 'src/app/interfaces/profesor.interface';
@@ -38,6 +38,7 @@ import {
   closeCircle,
   addCircle,
   camera,
+  starOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
@@ -71,9 +72,11 @@ export class PerfilProfesorPage implements OnInit {
   editandoContacto = false;
 
   materiasDisponibles: Materia[] = [];
+  ratingSeleccionado = 0;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private profesorService: ProfesoresService,
     private authService: AuthService,
     private alertCtrl: AlertController,
@@ -89,8 +92,8 @@ export class PerfilProfesorPage implements OnInit {
       'mail-outline': mailOutline,
       'logo-whatsapp': logoWhatsapp,
       'close-circle': closeCircle,
-      'add-circle': addCircle,
       camera: camera,
+      'star-outline': starOutline,
     });
   }
 
@@ -99,14 +102,18 @@ export class PerfilProfesorPage implements OnInit {
     const usuario = this.authService.usuario;
 
     if (id) {
+      console.log('Cargando profesor por ID de ruta:', id);
       this.profesorService
         .obtenerProfesorPorId(Number(id))
         .subscribe((data) => {
           this.profesor = data;
           this.profesorOriginal = JSON.parse(JSON.stringify(data));
           this.modoEdicion.set(this.profesor?.id_usuario === usuario?.id);
+          console.log('Profesor cargado:', this.profesor); // ✅ Verifica aquí qué campos tiene
+          console.log('URL de foto:', this.profesor.foto); // ✅ Verifica la URL
         });
     } else {
+      console.log('No se proporcionó ID en la ruta, buscando por usuario...');
       const usuarioId = this.authService.usuario?.id;
 
       if (usuarioId !== undefined) {
@@ -123,12 +130,15 @@ export class PerfilProfesorPage implements OnInit {
     }
 
     // Cargar materias disponibles para agregar
-    
-      this.materiaService.obtenerTodasMaterias().subscribe((materias) => {
-        this.materiasDisponibles = materias;
-          console.log("Materias cargadas:", materias); // ✔ acá sí funciona
-      });
-      
+
+    this.materiaService.obtenerTodasMaterias().subscribe((materias) => {
+      this.materiasDisponibles = materias;
+      console.log('Materias cargadas:', materias); // ✔ acá sí funciona
+    });
+  }
+
+  round(value: number | null | undefined): number {
+    return Math.round(value || 0);
   }
 
   // Editar precio
@@ -180,7 +190,7 @@ export class PerfilProfesorPage implements OnInit {
           name: 'foto_url',
           type: 'url',
           placeholder: 'URL de la imagen',
-          value: this.profesor?.foto_url || '',
+          value: this.profesor?.foto || '',
         },
       ],
       buttons: [
@@ -192,7 +202,7 @@ export class PerfilProfesorPage implements OnInit {
           text: 'Guardar',
           handler: (data) => {
             if (this.profesor) {
-              this.profesor.foto_url = data.foto_url;
+              this.profesor.foto = data.foto_url;
               this.haycambios = true;
             }
           },
@@ -201,6 +211,129 @@ export class PerfilProfesorPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async seleccionarRating(valor: number) {
+    this.ratingSeleccionado = valor;
+    if (this.ratingSeleccionado < 1 || this.ratingSeleccionado > 5) {
+      await this.showToast(
+        'Debes seleccionar una calificación de 1 a 5 estrellas',
+        'warning'
+      );
+      return;
+    }
+    if (!this.profesor?.id) {
+      await this.showToast('Profesor no válido', 'danger');
+      return;
+    }
+
+    const alert = await this.alertCtrl.create({
+      header: 'Dejar Reseña',
+      message: `Calificación: ${this.ratingSeleccionado} ⭐`,
+      inputs: [
+        {
+          name: 'comentario',
+          type: 'textarea',
+          placeholder: 'Escribe tu comentario (opcional)',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Enviar',
+          handler: async (data) => {
+            const loading = await this.loadingCtrl.create({
+              message: 'Enviando reseña...',
+            });
+            await loading.present();
+
+            const usuarioId = this.authService.usuario?.id;
+            if (!usuarioId) {
+              await loading.dismiss();
+              await this.showToast(
+                'Debes iniciar sesión para dejar una reseña',
+                'warning'
+              );
+              this.router.navigate(['/login']);
+              return false;
+            }
+
+            const reviewData = {
+              usuario_id: usuarioId,
+              estrellas: this.ratingSeleccionado,
+              comentario: data.comentario || '',
+            };
+
+            if (!this.profesor?.id) {
+              await loading.dismiss();
+              await this.showToast('Profesor no válido', 'danger');
+              return false;
+            }
+
+            this.profesorService.calificarProfesor(
+              this.profesor.id,
+              reviewData).subscribe({
+              next: async () => {
+                await loading.dismiss();
+                await this.showToast('¡Reseña enviada con éxito!', 'success');
+
+                this.ratingSeleccionado = 0; // reset estrellas
+
+                if (this.profesor) {
+                  this.profesorService
+                    .obtenerProfesorPorId(this.profesor.id)
+                    .subscribe((data) => {
+                      this.profesor = data;
+                    });
+                }
+              },
+              error: async (error) => {
+                await loading.dismiss();
+
+                let errorMessage = 'Error al enviar la reseña';
+                if (error.status === 409) {
+                  errorMessage = 'Ya has dejado una reseña para este profesor';
+                }
+
+                await this.showToast(errorMessage, 'danger');
+              },
+            });
+
+            return true;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  // Formatear fecha para las reseñas
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return 'Hoy';
+    } else if (diffDays === 1) {
+      return 'Ayer';
+    } else if (diffDays < 7) {
+      return `Hace ${diffDays} días`;
+    } else if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7);
+      return `Hace ${weeks} ${weeks === 1 ? 'semana' : 'semanas'}`;
+    } else {
+      return date.toLocaleDateString('es-AR', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+    }
   }
 
   // Agregar materia
@@ -294,7 +427,7 @@ export class PerfilProfesorPage implements OnInit {
         email: this.profesor.email,
         telefono: this.profesor.telefono,
         precio_hora: this.profesor.precio_hora,
-        foto_url: this.profesor.foto_url,
+        foto_url: this.profesor.foto,
         experiencia: this.profesor.experiencia,
         materias_id: this.profesor.materias?.map((m) => m.id) || [],
         usuario_id: 0,
@@ -330,7 +463,7 @@ export class PerfilProfesorPage implements OnInit {
           this.profesor = data;
           this.profesorOriginal = JSON.parse(JSON.stringify(data));
           this.modoEdicion.set(this.profesor?.id_usuario === usuario?.id);
-          
+
           if (this.modoEdicion()) {
             this.cargarMaterias();
           }

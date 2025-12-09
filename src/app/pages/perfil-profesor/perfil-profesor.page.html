@@ -27,7 +27,7 @@
     <!-- Header con foto de fondo -->
     <div
       class="profile-header"
-      [style.background-image]="'url(' + (profesor.foto_url || './assets/imgs/default-user.png') + ')'"
+      [style.background-image]="'url(' + (profesor.foto || './assets/imgs/default-user.png') + ')'"
     >
       @if(modoEdicion()) {
       <div class="edit-badge">✏️ Mi Perfil</div>
@@ -39,6 +39,29 @@
       <h1 class="profile-name">
         {{ profesor.nombre }} {{ profesor.apellido }}
       </h1>
+
+      <div class="rating-section">
+        <div class="stars">
+          <ion-icon
+            *ngFor="let star of [1,2,3,4,5]"
+            [name]="star <= ratingSeleccionado ? 'star' : 'star-outline'"
+            (click)="seleccionarRating(star)"
+            class="star"
+          ></ion-icon>
+
+          <span class="rating-value"> {{ ratingSeleccionado }}/5 </span>
+        </div>
+
+        <span class="rating-value">
+          {{ profesor.rating_promedio | number:'1.1-1' }}/5
+        </span>
+
+        @if (profesor.cantidad_calificacione > 0) {
+        <span class="reviews-count">
+          ({{ profesor.cantidad_calificacione }} reseñas)
+        </span>
+        }
+      </div>
 
       @if(profesor.precio_hora) {
       <div class="profile-price">

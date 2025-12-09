@@ -100,7 +100,7 @@ export class RegisterPage implements OnInit {
         await this.showToast('¡Registro exitoso! Bienvenido', 'success');
 
         // Navegar al home o dashboard en lugar de login
-        this.router.navigate(['/home'], { replaceUrl: true });
+        this.router.navigate(['/login'], { replaceUrl: true });
       },
       error: async (error) => {
         console.error('Error en registro:', error);

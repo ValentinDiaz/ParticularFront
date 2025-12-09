@@ -80,12 +80,10 @@ ion-content {
 }
 
 .logo-image {
-  width: 200px;
-  height: 200px;
+  width: 600px;
+  height: 300px;
   object-fit: contain;
-  margin-bottom: 30px;
   filter: drop-shadow(0 10px 30px rgba(77, 208, 225, 0.4));
-  animation: float 3s ease-in-out infinite;
 }
 
 .brand-name {

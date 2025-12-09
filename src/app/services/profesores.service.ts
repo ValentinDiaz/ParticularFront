@@ -12,6 +12,7 @@ export class ProfesoresService {
   constructor(private http: HttpClient) {}
 
   private URL_BASE = 'http://localhost:3000/api/profesores';
+  private URL_RESENIAS = 'http://localhost:3000/api/calificacion';
 
   private endPoints = {
     obtenerProfesorPorMateria: '/materia/',
@@ -61,10 +62,19 @@ export class ProfesoresService {
 
 
 
-  registrarProfesor(profesorData: ProfesorRequest): Observable<ProfesorRequest> {
+  registrarProfesor(profesorData: FormData): Observable<ProfesorRequest> {
     const url = `${this.URL_BASE}`;
     return this.http.post<ProfesorRequest>(url, profesorData, {
       withCredentials: true,
     });
   } 
+
+
+
+  calificarProfesor( profesorId:number , calificacionData: any): Observable<any> {
+    const url = `${this.URL_RESENIAS}/${profesorId}`;
+    return this.http.post<any>(url, calificacionData, {
+      withCredentials: true,
+    });
+  }
 }

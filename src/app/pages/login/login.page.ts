@@ -98,7 +98,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {}
 
-  olvidePassword() {
+  registro() {
     this.router.navigate(['/register'], { replaceUrl: true });
   }
 
