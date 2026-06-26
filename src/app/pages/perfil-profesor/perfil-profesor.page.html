@@ -10,8 +10,11 @@
       fill="clear"
       (click)="guardarCambios()"
       [disabled]="!haycambios"
+
     >
       <ion-icon
+            class="save-icon"
+
         name="checkmark-circle-outline"
         style="font-size: 1.5rem"
       ></ion-icon>
@@ -31,8 +34,25 @@
     >
       @if(modoEdicion()) {
       <div class="edit-badge">✏️ Mi Perfil</div>
-      <button class="photo-edit-btn" (click)="editarFoto()">
+      <input
+        type="file"
+        accept="image/*"
+        hidden
+        #fileInput
+        (change)="onFotoSeleccionada($event)"
+      />
+
+      <button type="button" class="photo-edit-btn" (click)="fileInput.click()">
         <ion-icon name="camera"></ion-icon>
+      </button>
+
+      } @if (usuario && !modoEdicion()) {
+      <button
+        class="favorite-btn"
+        [class.active]="esFavorito"
+        (click)="toggleFavorito()"
+      >
+        <ion-icon [name]="esFavorito ? 'heart' : 'heart-outline'"></ion-icon>
       </button>
       }
 
@@ -56,9 +76,9 @@
           {{ profesor.rating_promedio | number:'1.1-1' }}/5
         </span>
 
-        @if (profesor.cantidad_calificacione > 0) {
+        @if (profesor.cantidad_calificaciones > 0) {
         <span class="reviews-count">
-          ({{ profesor.cantidad_calificacione }} reseñas)
+          ({{ profesor.cantidad_calificaciones }} reseñas)
         </span>
         }
       </div>
@@ -210,6 +230,24 @@
         </div>
         }
       </div>
+      
+<!-- Reseñas: el backend solo expone el conteo/promedio en el DTO de profesor,
+     no hay endpoint para listar las calificaciones individuales todavía -->
+<div class="info-section resenas-section">
+  <div class="section-header">
+    <div class="section-title">Reseñas</div>
+    <span class="resenas-count">{{ profesor.cantidad_calificaciones || 0 }}</span>
+  </div>
+
+  @if(!profesor.cantidad_calificaciones) {
+    <div class="resenas-empty">
+      <ion-icon name="chatbubbles-outline"></ion-icon>
+      <p>Aún no hay reseñas</p>
+      <span>Sé el primero en dejar una opinión</span>
+    </div>
+  }
+</div>
+
     </div>
 
     <!-- Botones de acción -->

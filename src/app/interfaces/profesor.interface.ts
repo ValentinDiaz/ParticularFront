@@ -1,17 +1,18 @@
-import { Materia } from "./materia.interface";
+import { Materia } from './materia.interface';
 
 export interface Profesor {
-  foto: string;
   id: number;
   nombre: string;
-  apellido:string;
+  apellido: string;
   email: string;
-  precio_hora:number;
-  telefono:number;
-  experiencia:string;
-  materias:Materia[];
-  id_usuario:number;
-  rating_promedio:number;
-  cantidad_calificacione:number;
-  resenias:string[];
+  telefono: number;
+  experiencia: string;
+  precio_hora: number;
+  foto: string;
+  rating_promedio: number;
+  cantidad_calificaciones: number;
+  usuario_id: number;
+  materias: Materia[];
+  createdAt?: string;
+  updateAt?: string;
 }

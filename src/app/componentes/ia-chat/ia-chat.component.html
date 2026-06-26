@@ -1,0 +1,146 @@
+<div class="chat-ia-container">
+  <!-- Botón para abrir chat -->
+  <ion-button
+    *ngIf="!chatAbierto"
+    expand="block"
+    fill="solid"
+    (click)="abrirChat()"
+    class="btn-abrir-chat"
+  >
+    <ion-icon slot="start" name="sparkles-outline"></ion-icon>
+    Probá la búsqueda inteligente con IA
+  </ion-button>
+
+  <!-- Panel del chat -->
+  <ion-card *ngIf="chatAbierto" class="chat-card">
+    <ion-card-content>
+      <!-- Header del chat -->
+      <div class="chat-header">
+        <div class="header-title">
+          <ion-icon name="sparkles-outline"></ion-icon>
+          <h3>Asistente IA</h3>
+        </div>
+        <ion-button fill="clear" size="small" (click)="cerrarChat()">
+          <ion-icon class="icon-close" name="close-circle-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+      <p class="chat-description">
+        Preguntame qué profesor necesitás y te ayudo a encontrarlo
+      </p>
+
+      <!-- Mensajes del chat -->
+      <div class="mensajes-container" #mensajesContainer>
+        <div
+          *ngFor="let mensaje of mensajes"
+          [class]="'mensaje mensaje-' + mensaje.tipo"
+        >
+          <!-- Avatar -->
+          <div class="mensaje-avatar">
+            <ion-icon
+              *ngIf="mensaje.tipo === 'ia'"
+              name="sparkles-outline"
+            ></ion-icon>
+            <ion-icon
+              *ngIf="mensaje.tipo === 'usuario'"
+              name="person-outline"
+            ></ion-icon>
+          </div>
+
+          <!-- Contenido -->
+          <div class="mensaje-contenido">
+            <div class="mensaje-texto">
+              {{ mensaje.texto }}
+            </div>
+
+            <!-- Lista de profesores si los hay -->
+            <div
+              *ngIf="mensaje.profesores && mensaje.profesores.length > 0"
+              class="profesores-lista"
+            >
+              <div
+                *ngFor="let profesor of mensaje.profesores"
+                class="profesor-card"
+              >
+                @if (profesor.foto) {
+                  <img [src]="profesor.foto" alt="{{ profesor.nombre }}" />
+                } @else {
+                  <div class="image-placeholder">
+                    <span class="placeholder-letter">{{
+                      profesor.nombre.charAt(0)
+                    }}</span>
+                  </div>
+                }
+
+                <div class="profesor-info">
+                  <h4>{{ profesor.nombre }} {{ profesor.apellido }}</h4>
+                  <p *ngIf="profesor.experiencia" class="profesor-desc">
+                    {{ profesor.experiencia }}
+                  </p>
+                  <div *ngIf="profesor.materias" class="materias-chips">
+                    <span
+                      *ngFor="let materia of profesor.materias"
+                      class="materia-chip"
+                    >
+                      {{ materia }}
+                    </span>
+                  </div>
+                </div>
+
+                <ion-button (click)="verPerfilProfesor(profesor)" size="small" class="ver-perfil-btn">
+              Ver perfil
+              <ion-icon slot="end" name="arrow-forward"></ion-icon>
+            </ion-button>
+              </div>
+
+              <div
+                *ngIf="mensaje.profesores.length === 0"
+                class="no-resultados"
+              >
+                <ion-icon name="school-outline"></ion-icon>
+                <p>No encontré profesores con esas características</p>
+              </div>
+            </div>
+
+            <small class="mensaje-hora">
+              {{ formatearHora(mensaje.timestamp) }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Indicador de escritura -->
+        <div *ngIf="cargando" class="mensaje mensaje-ia escribiendo">
+          <div class="mensaje-avatar">
+            <ion-icon name="sparkles-outline"></ion-icon>
+          </div>
+          <div class="mensaje-contenido">
+            <div class="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input de mensaje -->
+      <div class="input-container">
+        <ion-input
+          [(ngModel)]="mensajeUsuario"
+          placeholder="Ej: Busco profesor de matemática..."
+          [disabled]="cargando"
+          (keyup.enter)="enviarMensaje()"
+          class="chat-input"
+        ></ion-input>
+
+        <ion-button
+          (click)="enviarMensaje()"
+          [disabled]="!mensajeUsuario.trim() || cargando"
+          class="btn-enviar"
+        >
+          <ion-icon name="send-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

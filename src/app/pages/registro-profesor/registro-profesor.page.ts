@@ -39,6 +39,7 @@ import {
   camera,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { extractErrorMessage } from 'src/app/shared/api-error.util';
 
 @Component({
   selector: 'app-registro-profesor',
@@ -66,7 +67,7 @@ export class RegistroProfesorPage implements OnInit {
   materiasDisponibles: Materia[] = [];
   isLoading = false;
   usuarioActual: Usuario | null = null;
-  selectedFileName: string = '';
+  selectedFileName: string | null = null;
   photoPreview: string | null = null;
   selectedFile: File | null = null;
 
@@ -162,9 +163,9 @@ export class RegistroProfesorPage implements OnInit {
         return;
       }
 
-      // Validar tamaño (opcional, por ejemplo máximo 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        console.error('La imagen no debe superar los 5MB');
+      // El backend rechaza imágenes de más de 2MB
+      if (file.size > 2 * 1024 * 1024) {
+        this.showToast('La imagen no debe superar los 2MB', 'danger');
         return;
       }
 
@@ -254,33 +255,26 @@ export class RegistroProfesorPage implements OnInit {
 
         // Redirigir al perfil o home
         this.router.navigate(['/home'], { replaceUrl: true });
-        window.location.reload();
       },
-      error: async (error: { status: number; error: { error: string } }) => {
-        console.error('Error en registro de profesor:', error);
-
+      error: async (error: any) => {
         await loading.dismiss();
         this.isLoading = false;
 
-        let errorMessage = 'Ocurrió un error en el registro';
-
-        if (error.status === 400) {
-          errorMessage = error.error?.error || 'Faltan campos obligatorios';
-        } else if (error.status === 401) {
+        let errorMessage: string;
+        if (error.status === 401) {
           errorMessage = 'Debes iniciar sesión primero';
-        } else if (error.status === 404) {
-          errorMessage = 'Usuario no encontrado';
         } else if (error.status === 409) {
-          errorMessage =
-            error.error?.error || 'Ya estás registrado como profesor';
+          errorMessage = extractErrorMessage(
+            error,
+            'Ya estás registrado como profesor'
+          );
         } else if (error.status === 413) {
-          errorMessage = 'La imagen es demasiado grande. Máximo 5MB';
-        } else if (error.status === 415) {
-          errorMessage = 'Formato de imagen no válido';
-        } else if (error.status === 422) {
-          errorMessage = 'Datos inválidos, verifica la información';
-        } else if (error.status === 0) {
-          errorMessage = 'No se pudo conectar con el servidor';
+          errorMessage = 'La imagen es demasiado grande. Máximo 2MB';
+        } else {
+          errorMessage = extractErrorMessage(
+            error,
+            'Ocurrió un error en el registro'
+          );
         }
 
         await this.showToast(errorMessage, 'danger');
@@ -300,4 +294,15 @@ export class RegistroProfesorPage implements OnInit {
     });
     await toast.present();
   }
+  removePhoto() {
+  this.selectedFileName = null;
+  this.photoPreview = null;
+  this.profesorForm.patchValue({ foto: null });
+  
+  // Limpiar el input file
+  const fileInput = document.getElementById('foto') as HTMLInputElement;
+  if (fileInput) {
+    fileInput.value = '';
+  }
+}
 }

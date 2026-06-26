@@ -1,9 +1,10 @@
-import { RegistroProfesorPage } from './../pages/registro-profesor/registro-profesor.page';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Profesor } from '../interfaces/profesor.interface';
 import { ProfesorRequest } from '../interfaces/profesor-request.interface';
+import { PaginatedProfesores } from '../interfaces/paginated-response.interface';
+import { CalificacionRequest } from '../interfaces/calificacion.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,18 +14,28 @@ export class ProfesoresService {
 
   private URL_BASE = 'http://localhost:3000/api/profesores';
   private URL_RESENIAS = 'http://localhost:3000/api/calificacion';
+    private URL_CHAT = 'http://localhost:3000/api/chatbot';
+
 
   private endPoints = {
     obtenerProfesorPorMateria: '/materia/',
     obternerProfesorPorUsuario: '/usuario/',
     resgistarProfesor: '/registroProfesor',
+    ranking: '/ranking',
+    reclamar: '/reclamar',
   };
 
 
+  reclamarProfesor(id_profesor:number, id_usuario: number): Observable<ProfesorRequest> {
+    const url = `${this.URL_BASE}${this.endPoints.reclamar}/${id_profesor}`;
+    return this.http.post<ProfesorRequest>(url, { id_usuario } ,{
+      withCredentials: true,
+    });
+  }
 
   actualizarProfesor(
     id: number,
-    profesorData: Partial<ProfesorRequest>
+    profesorData: Partial<ProfesorRequest> | FormData
   ): Observable<ProfesorRequest> {
     const url = `${this.URL_BASE}/${id}`;
     return this.http.put<ProfesorRequest>(url, profesorData, {
@@ -32,11 +43,12 @@ export class ProfesoresService {
     });
   }
 
+  getRankingProfesores(): Observable<Profesor[]> {
+    const url = `${this.URL_BASE}${this.endPoints.ranking}`;
+    return this.http.get<Profesor[]>(url, { withCredentials: true });
+  }
 
-
-
-
-
+  
 
   obtenerProfesorPorId(id: number): Observable<Profesor> {
     const url = `${this.URL_BASE}/${id}`;
@@ -48,32 +60,34 @@ export class ProfesoresService {
     return this.http.get<Profesor>(url, { withCredentials: true });
   }
 
-
   obtenerProfesorByMateria(
     id: number,
     page: number = 1,
     limit: number = 10
-  ): Observable<Profesor[]> {
+  ): Observable<PaginatedProfesores> {
     const url = `${this.URL_BASE}${this.endPoints.obtenerProfesorPorMateria}${id}?page=${page}&limit=${limit}`;
-    return this.http.get<Profesor[]>(url, { withCredentials: true });
+    return this.http.get<PaginatedProfesores>(url, { withCredentials: true });
   }
-
-
-
-
 
   registrarProfesor(profesorData: FormData): Observable<ProfesorRequest> {
     const url = `${this.URL_BASE}`;
     return this.http.post<ProfesorRequest>(url, profesorData, {
       withCredentials: true,
     });
-  } 
+  }
 
-
-
-  calificarProfesor( profesorId:number , calificacionData: any): Observable<any> {
+  calificarProfesor(
+    profesorId: number,
+    calificacionData: CalificacionRequest
+  ): Observable<any> {
     const url = `${this.URL_RESENIAS}/${profesorId}`;
     return this.http.post<any>(url, calificacionData, {
+      withCredentials: true,
+    });
+  }
+
+  enviarMensajeChatbot(data: { message: string }): Observable<any> {
+    return this.http.post<any>(this.URL_CHAT, data, {
       withCredentials: true,
     });
   }

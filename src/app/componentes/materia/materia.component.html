@@ -1,10 +1,18 @@
 <div class="contenedor-materias">
   <ion-grid>
+     @if (loadingMaterias) {
+    <div class="loading-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+  } @else {
     <ion-row class="ion-justify-content-center">
       @for(materia of materias; track materia.id) {
-        <ion-col size="6" size-md="4" size-lg="3">
-          <ion-card   (click)="seleccionarMateria(materia)" class="materia-card">
+        <ion-col size="12" size-sm="6" size-md="4" size-lg="3">
+          <ion-card (click)="seleccionarMateria(materia)" class="materia-card">
             <ion-card-content class="ion-text-center">
+              <div class="materia-icon">
+                <ion-icon name="book-outline"></ion-icon>
+              </div>
               <h3>{{ materia.nombre }}</h3>
             </ion-card-content>
           </ion-card>
@@ -16,5 +24,6 @@
         </ion-col>
       }
     </ion-row>
+  }
   </ion-grid>
 </div>

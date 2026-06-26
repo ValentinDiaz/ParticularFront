@@ -12,6 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { LoadingController, ToastController } from '@ionic/angular/standalone';
+import { extractErrorMessage } from 'src/app/shared/api-error.util';
 
 @Component({
   selector: 'app-login',
@@ -61,11 +62,6 @@ export class LoginPage implements OnInit {
 
     this.authService.login(this.loginForm.value).subscribe({
       next: async (res) => {
-        console.log('Login exitoso', res);
-
-        // Guardar el usuario en localStorage
-        localStorage.setItem('usuario', JSON.stringify(res));
-
         await loading.dismiss();
         this.isLoading = false;
 
@@ -76,20 +72,13 @@ export class LoginPage implements OnInit {
       },
 
       error: async (err) => {
-        console.error('Error en login:', err);
-
         await loading.dismiss();
         this.isLoading = false;
 
-        let errorMessage = 'Ocurrió un error al iniciar sesión';
-
-        if (err.status === 400) {
-          errorMessage = 'Email o contraseña incorrectos';
-        } else if (err.status === 422) {
-          errorMessage = 'Datos inválidos, verifica la información';
-        } else if (err.status === 0) {
-          errorMessage = 'No se pudo conectar con el servidor';
-        }
+        let errorMessage = extractErrorMessage(
+          err,
+          'Email o contraseña incorrectos'
+        );
 
         await this.showToast(errorMessage, 'danger');
       },

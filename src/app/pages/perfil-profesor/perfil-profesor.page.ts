@@ -2,6 +2,9 @@ import { MateriasService } from 'src/app/services/materias.service';
 import { Usuario } from './../../interfaces/usuario.interface';
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ImageCropperComponent } from 'ngx-image-cropper';
+import { CropperModalComponent } from './../../componentes/cropper-modal/cropper-modal.component';
+
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -22,6 +25,7 @@ import {
   ToastController,
   ActionSheetController,
   LoadingController,
+  ModalController
 } from '@ionic/angular/standalone';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfesoresService } from 'src/app/services/profesores.service';
@@ -39,8 +43,12 @@ import {
   addCircle,
   camera,
   starOutline,
+  heartOutline,
+  heart,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { UsuariosService } from 'src/app/services/usuarios.service';
+import { extractErrorMessage } from 'src/app/shared/api-error.util';
 
 @Component({
   selector: 'app-perfil-profesor',
@@ -58,21 +66,28 @@ import { addIcons } from 'ionicons';
     IonToolbar,
     CommonModule,
     FormsModule,
+    ImageCropperComponent,
   ],
 })
 export class PerfilProfesorPage implements OnInit {
-  profesor?: Profesor;
+esFavorito: any;
+
+  profesor?: Profesor|null;
   profesorOriginal?: Profesor; // Para cancelar cambios
   modoEdicion = signal(false);
   haycambios = false;
+  usuario?: Usuario | null;
 
   // Estados de edición
   editandoPrecio = false;
   editandoExperiencia = false;
   editandoContacto = false;
+  fotoFile?: File;
+
 
   materiasDisponibles: Materia[] = [];
   ratingSeleccionado = 0;
+  mostrarTodasResenas: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,7 +98,10 @@ export class PerfilProfesorPage implements OnInit {
     private toastCtrl: ToastController,
     private actionSheetCtrl: ActionSheetController,
     private materiaService: MateriasService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private usuarioService: UsuariosService,
+    private modalCtrl: ModalController
+
   ) {
     addIcons({
       'checkmark-circle-outline': checkmarkCircleOutline,
@@ -94,12 +112,14 @@ export class PerfilProfesorPage implements OnInit {
       'close-circle': closeCircle,
       camera: camera,
       'star-outline': starOutline,
+      'heart-outline': heartOutline,
+      heart: heart,
     });
   }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    const usuario = this.authService.usuario;
+     this.usuario = this.authService.getUsuarioActual() as Usuario;
 
     if (id) {
       console.log('Cargando profesor por ID de ruta:', id);
@@ -108,9 +128,7 @@ export class PerfilProfesorPage implements OnInit {
         .subscribe((data) => {
           this.profesor = data;
           this.profesorOriginal = JSON.parse(JSON.stringify(data));
-          this.modoEdicion.set(this.profesor?.id_usuario === usuario?.id);
-          console.log('Profesor cargado:', this.profesor); // ✅ Verifica aquí qué campos tiene
-          console.log('URL de foto:', this.profesor.foto); // ✅ Verifica la URL
+          this.modoEdicion.set(this.profesor?.usuario_id === this.usuario?.id);
         });
     } else {
       console.log('No se proporcionó ID en la ruta, buscando por usuario...');
@@ -135,6 +153,8 @@ export class PerfilProfesorPage implements OnInit {
       this.materiasDisponibles = materias;
       console.log('Materias cargadas:', materias); // ✔ acá sí funciona
     });
+
+    this.obtenerFavoritos();
   }
 
   round(value: number | null | undefined): number {
@@ -182,36 +202,49 @@ export class PerfilProfesorPage implements OnInit {
   }
 
   // Editar foto
-  async editarFoto() {
-    const alert = await this.alertCtrl.create({
-      header: 'Cambiar foto de perfil',
-      inputs: [
-        {
-          name: 'foto_url',
-          type: 'url',
-          placeholder: 'URL de la imagen',
-          value: this.profesor?.foto || '',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            if (this.profesor) {
-              this.profesor.foto = data.foto_url;
-              this.haycambios = true;
-            }
-          },
-        },
-      ],
+async onFotoSeleccionada(event: any) {
+  if (event.target.files && event.target.files.length > 0) {
+    
+    const modal = await this.modalCtrl.create({
+      component: CropperModalComponent,
+      componentProps: { imageChangedEvent: event }
     });
 
-    await alert.present();
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+
+    if (data && data.blob) {
+      if (!(data.blob.type as string)?.startsWith('image/')) {
+        await this.showToast('El archivo debe ser una imagen', 'danger');
+        event.target.value = '';
+        return;
+      }
+      if (data.blob.size > 2 * 1024 * 1024) {
+        await this.showToast('La imagen no debe superar los 2MB', 'danger');
+        event.target.value = '';
+        return;
+      }
+
+      // 1. Actualizamos la vista para que el usuario se vea "lindo" ya mismo
+      if (this.profesor) {
+        this.profesor.foto = data.preview;
+      }
+
+      // 2. GUARDAMOS EL BLOB EN MEMORIA (No lo subimos todavía)
+      this.fotoFile = data.blob;
+
+      // 3. Activamos el botón de "Guardar Cambios"
+      this.haycambios = true;
+    }
+
+    // Limpiamos el input
+    event.target.value = '';
   }
+}
+
+
+  
 
   async seleccionarRating(valor: number) {
     this.ratingSeleccionado = valor;
@@ -250,8 +283,7 @@ export class PerfilProfesorPage implements OnInit {
             });
             await loading.present();
 
-            const usuarioId = this.authService.usuario?.id;
-            if (!usuarioId) {
+            if (!this.authService.usuario?.id) {
               await loading.dismiss();
               await this.showToast(
                 'Debes iniciar sesión para dejar una reseña',
@@ -262,7 +294,6 @@ export class PerfilProfesorPage implements OnInit {
             }
 
             const reviewData = {
-              usuario_id: usuarioId,
               estrellas: this.ratingSeleccionado,
               comentario: data.comentario || '',
             };
@@ -293,10 +324,10 @@ export class PerfilProfesorPage implements OnInit {
               error: async (error) => {
                 await loading.dismiss();
 
-                let errorMessage = 'Error al enviar la reseña';
-                if (error.status === 409) {
-                  errorMessage = 'Ya has dejado una reseña para este profesor';
-                }
+                const errorMessage =
+                  error.status === 409
+                    ? 'Ya has dejado una reseña para este profesor'
+                    : extractErrorMessage(error, 'Error al enviar la reseña');
 
                 await this.showToast(errorMessage, 'danger');
               },
@@ -411,46 +442,60 @@ export class PerfilProfesorPage implements OnInit {
 
   // Guardar todos los cambios
   async guardarCambios() {
-    if (!this.profesor || !this.haycambios) return;
+  if (!this.profesor || !this.haycambios) return;
 
-    const loading = await this.loadingCtrl.create({
-      message: 'Guardando cambios...',
-      spinner: 'crescent',
-    });
-    await loading.present();
+  const loading = await this.loadingCtrl.create({
+    message: 'Guardando cambios...',
+    spinner: 'crescent',
+  });
+  await loading.present();
 
-    try {
-      // Preparar datos para enviar
-      const profesorData: ProfesorRequest = {
-        nombre: this.profesor.nombre,
-        apellido: this.profesor.apellido,
-        email: this.profesor.email,
-        telefono: this.profesor.telefono,
-        precio_hora: this.profesor.precio_hora,
-        foto_url: this.profesor.foto,
-        experiencia: this.profesor.experiencia,
-        materias_id: this.profesor.materias?.map((m) => m.id) || [],
-        usuario_id: 0,
-      };
+  try {
+    const formData = new FormData();
+    
+    // --- Datos de texto ---
+    formData.append('nombre', this.profesor.nombre);
+    formData.append('apellido', this.profesor.apellido);
+    formData.append('email', this.profesor.email);
+    formData.append('telefono', this.profesor.telefono.toString());
+    formData.append('precio_hora', this.profesor.precio_hora.toString());
+    formData.append('experiencia', this.profesor.experiencia || '');
 
-      await this.profesorService
-        .actualizarProfesor(this.profesor.id, profesorData)
-        .toPromise();
-
-      await loading.dismiss();
-
-      await this.showToast('Cambios guardados exitosamente', 'success');
-
-      this.haycambios = false;
-      this.profesorOriginal = JSON.parse(JSON.stringify(this.profesor));
-
-      this.cargarProfesor();
-    } catch (error) {
-      console.error('Error al guardar cambios:', error);
-      await loading.dismiss();
-      await this.showToast('Error al guardar los cambios', 'danger');
+    // Materias
+    const materias = this.profesor.materias?.map((m) => m.id) || [];
+    formData.append('materias_id', JSON.stringify(materias));
+    
+    // --- AQUÍ ESTÁ LA MAGIA DE LA FOTO ---
+    if (this.fotoFile) {
+      // Como viene del recortador es un 'Blob', no tiene nombre de archivo.
+      // Le inventamos uno (ej: 'perfil.png') para que el backend lo reconozca.
+      formData.append('foto', this.fotoFile, 'perfil_actualizado.png');
     }
+
+    // Enviamos todo junto
+    await this.profesorService
+      .actualizarProfesor(this.profesor.id, formData)
+      .toPromise();
+
+    await loading.dismiss();
+    await this.showToast('Cambios guardados exitosamente', 'success');
+
+    // Reseteamos estados
+    this.haycambios = false;
+    this.fotoFile = undefined; // Ya se subió, limpiamos la variable temporal
+    
+    // Actualizamos el "original" para futuras comparaciones
+    this.profesorOriginal = JSON.parse(JSON.stringify(this.profesor));
+
+    // Opcional: Recargar desde backend para asegurar consistencia
+    // this.cargarProfesor(); 
+
+  } catch (error) {
+    console.error('Error al guardar cambios:', error);
+    await loading.dismiss();
+    await this.showToast('Error al guardar los cambios', 'danger');
   }
+}
 
   cargarProfesor() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -462,7 +507,7 @@ export class PerfilProfesorPage implements OnInit {
         .subscribe((data) => {
           this.profesor = data;
           this.profesorOriginal = JSON.parse(JSON.stringify(data));
-          this.modoEdicion.set(this.profesor?.id_usuario === usuario?.id);
+          this.modoEdicion.set(this.profesor?.usuario_id === usuario?.id);
 
           if (this.modoEdicion()) {
             this.cargarMaterias();
@@ -512,4 +557,49 @@ export class PerfilProfesorPage implements OnInit {
     const url = `https://wa.me/${numero}?text=${mensaje}`;
     window.open(url, '_blank');
   }
+
+
+  obtenerFavoritos() {
+    
+    if (!this.usuario) return;
+    this.usuarioService.obtenerFavoritos(this.usuario.id).subscribe({
+      next: (favoritos) => {
+        this.esFavorito = favoritos.some((f) => f.id === this.profesor?.id);
+        console.log('Favoritos obtenidos:', favoritos);
+        console.log('Es favorito:', this.esFavorito);
+      },
+      error: (error) => {
+        console.error('Error al obtener favoritos:', error);
+      }
+    });
+  }
+
+ toggleFavorito() {
+  if (!this.usuario || !this.profesor?.id) return;
+
+  const accion$ = this.esFavorito
+    ? this.usuarioService.quitarFavorito(this.profesor.id, this.usuario.id)
+    : this.usuarioService.agregarFavorito(this.profesor.id, this.usuario.id);
+
+  accion$.subscribe({
+    next: () => {
+      this.esFavorito = !this.esFavorito;
+
+      this.toastCtrl.create({
+        message: this.esFavorito
+          ? 'Agregado a favoritos'
+          : 'Quitado de favoritos',
+        duration: 1500,
+      }).then(t => t.present());
+    },
+    error: () => {
+      this.toastCtrl.create({
+        message: 'Ocurrió un error. Intentalo nuevamente.',
+        duration: 2000,
+        color: 'danger',
+      }).then(t => t.present());
+    }
+  });
+}
+
 }

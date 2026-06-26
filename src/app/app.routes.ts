@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { permisosGuard } from './guards/permisos.guard';
+import { authGuard } from './guards/permisos.guard';
 
 export const routes: Routes = [
   {
@@ -28,7 +28,6 @@ export const routes: Routes = [
       import('./pages/buscar-profesor/buscar-profesor.page').then(
         (m) => m.BucasProfesorPage
       ),
-    canActivate: [permisosGuard],
   },
   {
     path: 'perfil-profesor/:id',
@@ -36,7 +35,7 @@ export const routes: Routes = [
       import('./pages/perfil-profesor/perfil-profesor.page').then(
         (m) => m.PerfilProfesorPage
       ),
-    canActivate: [permisosGuard],
+    canActivate: [authGuard],
   },
   {
     path: 'perfil-profesor',
@@ -44,6 +43,7 @@ export const routes: Routes = [
       import('./pages/perfil-profesor/perfil-profesor.page').then(
         (m) => m.PerfilProfesorPage
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'registro-profesor',
@@ -51,6 +51,7 @@ export const routes: Routes = [
       import('./pages/registro-profesor/registro-profesor.page').then(
         (m) => m.RegistroProfesorPage
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'perfil-usuario/:id',
@@ -58,5 +59,6 @@ export const routes: Routes = [
       import('./pages/perfil-usuario/perfil-usuario.page').then(
         (m) => m.PerfilUsuarioPage
       ),
+    canActivate: [authGuard],
   },
 ];

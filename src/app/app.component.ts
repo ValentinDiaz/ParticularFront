@@ -16,9 +16,11 @@ import {
   IonMenuToggle,
   IonButton,
 } from '@ionic/angular/standalone';
+import { ChangeDetectorRef } from '@angular/core'; // <--- IMPORTANTE
+
 import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { Usuario } from './interfaces/usuario.interface';
 import { addIcons } from 'ionicons';
 import {
@@ -82,89 +84,112 @@ export class AppComponent implements OnInit {
   usuario: Usuario | null = null;
   profesor!: Profesor | null;
 
-  pages = [
-    { title: 'Home', url: '/home', icon: 'home', active: true },
-    { title: 'Perfil', url: '/profile', icon: 'person', active: false },
-    { title: 'Cerrar sesión', route: null, icon: 'log-out', active: false },
-  ];
+  pages: any[] = [];
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private alertCtrl: AlertController,
-    private profesorService: ProfesoresService
+    private profesorService: ProfesoresService,
+    private loadingCtrl: LoadingController,
+    private cd: ChangeDetectorRef,
   ) {
     this.addAllIcons();
   }
 
- ngOnInit(): void {
-  this.authService.cargarUsuarioDesdeSesion();
+  ngOnInit(): void {
+    // 1. Escuchar cambios (REACTIVO)
+    this.authService.usuario$.subscribe((user) => {
+      console.log('AppComponent detectó cambio de usuario:', user);
 
-  this.authService.usuario$.subscribe((user) => {
-    this.usuario = user;
+      this.usuario = user;
 
-    if (this.usuario) {
-      // Consulto si el usuario es profesor
-      this.profesorService
-        .obtenerProfesorPorIdUsuario(this.usuario.id)
-        .subscribe({
-          next: (profesor) => {
-            // Si existe un profesor para este usuario
-            this.profesor = profesor;
-            this.generarMenu();
-          },
-          error: (err) => {
-            if (err.status === 404) {
-              // No es profesor → profesor queda null
-              this.profesor = null;
-              this.generarMenu();
-            } else {
-              console.error('Error al verificar profesor:', err);
-            }
-          },
-        });
-    } else {
-      // Usuario no logueado
-      this.profesor = null;
+      // --- CORRECCIÓN CLAVE ---
+      if (!user) {
+        // Si no hay usuario, LIMPIAMOS INMEDIATAMENTE al profesor
+        this.profesor = null;
+      }
+
+      // Regeneramos el array del menú con los nuevos datos (o nulls)
       this.generarMenu();
-    }
-  });
-}
 
-generarMenu() {
-  this.pages = [{ title: 'Home', url: '/home', icon: 'home', active: true }];
+      // --- EL TRUCO MÁGICO ---
+      // Forzamos a Angular a repintar el HTML del menú en este preciso momento
+      this.cd.detectChanges();
 
-  if (this.usuario) {
-    this.pages.push(
-      { title: 'Perfil Usuario', url: `/perfil-usuario/${this.usuario.id}` , icon: 'person', active: false },
-      { title: 'Cerrar sesión', route: null, icon: 'log-out', active: false }
-    );
+      if (user) {
+        // Si hay usuario, buscamos si es profe
+        this.verificarSiEsProfesor(user.id);
+      }
+    });
+    // La validación inicial contra /auth/me ya la hace el constructor de AuthService;
+    // no hace falta repetirla acá (evita un GET /auth/me duplicado en cada carga).
+  }
 
-    if (this.profesor) {
-      // Si el usuario es profe → mostrar su perfil de profesor
-      this.pages.push({
-        title: 'Perfil Profesor',
-        url: `/perfil-profesor/${this.profesor.id}`, 
-        icon: 'school',
-        active: false,
-      });
-    } else {
-      
-      this.pages.push({
-        title: 'Hacete Profe',
-        url: '/registro-profesor',
-        icon: 'school',
-        active: false,
-      });
-    }
-  } else {
-    this.pages.push({
-      title: 'Iniciar sesión',
-      url: '/login',
-      icon: 'log-in',
-      active: false,
+  private verificarSiEsProfesor(id: number) {
+    this.profesorService.obtenerProfesorPorIdUsuario(id).subscribe({
+      next: (p) => {
+        this.profesor = p;
+        this.generarMenu(); // CORRECCIÓN: Regeneramos para AGREGAR la opción de profe
+      },
+      error: () => {
+        this.profesor = null;
+        this.generarMenu(); // Regeneramos por si había basura anterior
+      },
     });
   }
-}
+
+  generarMenu() {
+    // Reiniciamos el array
+    this.pages = [
+      {
+        title: 'Home',
+        url: '/home',
+        icon: 'home',
+        active: this.router.url === '/home',
+      },
+    ];
+
+    if (this.usuario) {
+      this.pages.push({
+        title: 'Perfil Usuario',
+        url: `/perfil-usuario/${this.usuario.id}`,
+        icon: 'person',
+        active: false, // Ojo: La lógica de 'active' es mejor manejarla con routerLinkActive en el HTML
+      });
+
+      if (this.profesor) {
+        this.pages.push({
+          title: 'Perfil Profesor',
+          url: `/perfil-profesor/${this.profesor.id}`,
+          icon: 'school',
+          active: false,
+        });
+      } else {
+        this.pages.push({
+          title: 'Hacete Profe',
+          url: '/registro-profesor',
+          icon: 'school',
+          active: false,
+        });
+      }
+
+      // Botón Cerrar Sesión (Siempre al final)
+      this.pages.push({
+        title: 'Cerrar sesión',
+        url: null,
+        icon: 'log-out',
+        active: false,
+      });
+    } else {
+      this.pages.push({
+        title: 'Iniciar sesión',
+        url: '/login',
+        icon: 'log-in',
+        active: false,
+      });
+    }
+  }
 
   addAllIcons() {
     addIcons({
@@ -198,33 +223,39 @@ generarMenu() {
   }
 
   onItemTap(page: any) {
-    if (!page?.active) {
-      const index = this.pages.findIndex((x) => x.active);
-      if (index !== -1) {
-        this.pages[index].active = false;
-      }
-      page.active = true;
-    }
-
-    if (page?.url) {
+    // CORRECCIÓN: Simplificamos la lógica de navegación
+    if (page.url) {
       this.router.navigate([page.url]);
     } else {
+      // Si no tiene URL, asumimos que es una acción (Logout)
       this.preguntarCerrarSesion();
     }
   }
 
-  onLogout() {
+  async onLogout() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Cerrando sesión...',
+      spinner: 'crescent',
+    });
+    await loading.present();
+
     this.authService.logOut().subscribe({
-      next: () => {
-        console.log('Logout exitoso');
+      next: async () => {
+        await loading.dismiss();
+        // Si tu authService ya redirige, quita esta línea.
+        // Si no, déjala para ir al home.
         this.router.navigate(['/home']);
       },
-      error: (err) => {
-        console.error('Error en logout', err);
+      error: async (err) => {
+        console.error('Error logout', err);
+        await loading.dismiss();
+        // Incluso si da error, forzamos la ida al home o login
+        this.router.navigate(['/home']);
       },
     });
   }
 
+  // ... resto de funciones (preguntarCerrarSesion, addIcons) iguales ...
   async preguntarCerrarSesion() {
     const alert = await this.alertCtrl.create({
       header: 'Cerrar sesión',

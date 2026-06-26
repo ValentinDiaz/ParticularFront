@@ -21,9 +21,15 @@ export class MateriasService {
   private endPoints = {
     obtenerAreasPorNivel: '/nivel/',
     obtenerMateriaPorArea: '/categoria/',
+    obtenerMateriasDestacadas: '/destacadas',
     
   };
 
+
+  obtenerMateriasDestacadas(): Observable<Materia[]> {
+    const url = `${this.URL_BASE_MATERIAS}${this.endPoints.obtenerMateriasDestacadas}`;
+    return this.http.get<Materia[]>(url, { withCredentials: true });
+  }
 
   obtenerMateriaPorAreaYNivel(areaId: number, nivelId: number): Observable<Materia[]> {
   const url = `${this.URL_BASE_MATERIAS}${this.endPoints.obtenerMateriaPorArea}${areaId}/nivel/${nivelId}`;

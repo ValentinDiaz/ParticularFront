@@ -14,9 +14,8 @@ ion-header {
   }
 }
 
-
 ion-content {
-    margin-top: 10px;
+  margin-top: 10px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   --background: transparent;
   height: 100vh;
@@ -24,26 +23,30 @@ ion-content {
   position: relative;
 }
 
-/* Fondo diagonal - mitad turquesa, mitad blanco */
+/* Fondo diagonal */
 .diagonal-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #0d4d4d 0%, #1a6666 50%, #ffffff 50%, #ffffff 100%);
+  background: linear-gradient(
+    135deg,
+    #0d4d4d 0%,
+    #1a6666 50%,
+    #ffffff 50%,
+    #ffffff 100%
+  );
   z-index: 0;
 }
 
 .diagonal-background::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    linear-gradient(135deg, transparent 49.5%, #4dd0e1 49.5%, #4dd0e1 50.5%, transparent 50.5%);
   box-shadow: 0 0 30px rgba(77, 208, 225, 0.5);
 }
 
@@ -55,7 +58,7 @@ ion-content {
   z-index: 1;
 }
 
-/* Sección del logo - Lado izquierdo */
+/* Logo section */
 .logo-section {
   flex: 0.4;
   display: flex;
@@ -66,11 +69,15 @@ ion-content {
 }
 
 .logo-section::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(77, 208, 225, 0.15) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(77, 208, 225, 0.15) 0%,
+    transparent 70%
+  );
   top: -200px;
   right: -200px;
   animation: pulse 4s ease-in-out infinite;
@@ -107,15 +114,16 @@ ion-content {
   opacity: 0.9;
 }
 
-/* Sección del registro - Lado derecho */
+/* Register section con SCROLL */
 .register-section {
   flex: 1.6;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Cambiado de center a flex-start */
   justify-content: center;
   padding: 20px;
-  overflow-y: auto;
+  overflow-y: auto; /* Scroll habilitado */
   overflow-x: hidden;
+  max-height: 100vh; /* Altura máxima */
 }
 
 /* Scrollbar personalizado */
@@ -143,13 +151,14 @@ form {
   padding: 25px;
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
-              0 0 0 2px rgba(77, 208, 225, 0.3);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(77, 208, 225, 0.3);
   border: 2px solid #4dd0e1;
   position: relative;
   overflow: visible;
   animation: slideInRight 0.8s ease-out;
-  margin: 10px 0;
+  margin: 20px 0; /* Margen arriba y abajo */
 }
 
 form::before {
@@ -233,11 +242,96 @@ input:focus,
 textarea:focus {
   border-color: #4dd0e1;
   background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.2),
-              0 0 15px rgba(77, 208, 225, 0.4);
+  box-shadow:
+    0 0 0 3px rgba(77, 208, 225, 0.2),
+    0 0 15px rgba(77, 208, 225, 0.4);
 }
 
-/* Estilos para el select de materias */
+/* ==========================================
+   FILE UPLOAD - NUEVO DISEÑO
+   ========================================== */
+.file-upload-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.file-upload-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .file-name {
+    flex: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px; /* Ancho máximo antes de cortar */
+  }
+
+  &.has-file {
+    background: rgba(77, 208, 225, 0.2);
+    border-color: #4dd0e1;
+    color: #ffffff;
+
+    ion-icon {
+      color: #4dd0e1;
+    }
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #4dd0e1;
+  }
+}
+
+.remove-file-button {
+  padding: 10px;
+  background: rgba(255, 107, 107, 0.2);
+  border: 2px solid rgba(255, 107, 107, 0.5);
+  border-radius: 8px;
+  color: #ff6b6b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background: rgba(255, 107, 107, 0.3);
+    border-color: #ff6b6b;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* ==========================================
+   MATERIAS - CON SCROLL LIMITADO
+   ========================================== */
 .materias-selector {
   position: relative;
 }
@@ -259,30 +353,60 @@ ion-select::part(icon) {
   color: #4dd0e1;
 }
 
-/* Chips de materias seleccionadas */
+/* Contenedor con altura máxima y scroll */
+.selected-materias-container {
+  margin-top: 8px;
+  max-height: 120px; /* Altura máxima para 3-4 filas de chips */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(77, 208, 225, 0.2);
+
+  /* Scrollbar personalizado para chips */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(77, 208, 225, 0.4);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(77, 208, 225, 0.6);
+  }
+}
+
 .selected-materias {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 8px;
-  color:#0d4d4d ;
 }
 
 ion-chip {
   --background: rgba(77, 208, 225, 0.2);
-  color:#e5e7e7 ;
+  color: #e5e7e7;
   border: 1px solid #4dd0e1;
   height: 28px;
-  font-size: 16px;
+  font-size: 12px;
+  margin: 0;
 }
 
 ion-chip ion-icon {
   cursor: pointer;
   color: #f5f8f8;
+  margin-left: 4px;
 }
 
 ion-chip ion-icon:hover {
-  color: #f0f1f1;
+  color: #ff6b6b;
 }
 
 .error {
@@ -323,24 +447,6 @@ button[type="submit"]:disabled {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.login-link {
-  text-align: center;
-  margin-top: 12px;
-}
-
-.login-link a {
-  color: #4dd0e1;
-  text-decoration: none;
-  font-size: 13px;
-  transition: color 0.3s ease;
-  text-shadow: 0 2px 8px rgba(77, 208, 225, 0.3);
-}
-
-.login-link a:hover {
-  color: #26a69a;
-  text-decoration: underline;
-}
-
 /* Animaciones */
 @keyframes slideUp {
   from {
@@ -374,7 +480,8 @@ button[type="submit"]:disabled {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -383,7 +490,8 @@ button[type="submit"]:disabled {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(1);
   }
@@ -396,13 +504,25 @@ button[type="submit"]:disabled {
 /* Responsive */
 @media (max-width: 768px) {
   .diagonal-background {
-    background: linear-gradient(180deg, #0d4d4d 0%, #1a6666 45%, #ffffff 45%, #ffffff 100%);
+    background: linear-gradient(
+      180deg,
+      #0d4d4d 0%,
+      #1a6666 45%,
+      #ffffff 45%,
+      #ffffff 100%
+    );
   }
-  
+
   .diagonal-background::before {
-    background: linear-gradient(180deg, transparent 44.5%, #4dd0e1 44.5%, #4dd0e1 45.5%, transparent 45.5%);
+    background: linear-gradient(
+      180deg,
+      transparent 44.5%,
+      #4dd0e1 44.5%,
+      #4dd0e1 45.5%,
+      transparent 45.5%
+    );
   }
-  
+
   .container {
     flex-direction: column;
   }
@@ -445,5 +565,9 @@ button[type="submit"]:disabled {
 
   .form-group.half {
     width: 100%;
+  }
+
+  .selected-materias-container {
+    max-height: 100px; /* Menos altura en móvil */
   }
 }

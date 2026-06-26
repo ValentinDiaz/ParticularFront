@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
 import { LoginRequest } from '../interfaces/login-request.interface';
-import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  finalize,
+  map,
+  Observable,
+  tap,
+  throwError,
+} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoginResponse } from '../interfaces/login-response.interface';
 import { Usuario } from '../interfaces/usuario.interface';
-import { Materia } from '../interfaces/materia.interface';
-import { Profesor } from '../interfaces/profesor.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,51 +19,25 @@ import { Profesor } from '../interfaces/profesor.interface';
 export class AuthService {
   private usuarioSubject = new BehaviorSubject<Usuario | null>(null);
   usuario$ = this.usuarioSubject.asObservable();
-
   private URL_BASE = 'http://localhost:3000/api/auth';
-  private URL_BASE_MATERIAS = 'http://localhost:3000/api/materias';
 
   private endPoints = {
     login: '/login',
     register: '/registro',
     logOut: '/logout',
     me: '/me',
-    profesorRegister: '/profeRegister',
     refres_token: '/refresh-token',
   };
 
   constructor(private http: HttpClient) {
-    this.cargarUsuarioLocalStorage();
+    // La sesión vive en cookies httpOnly: la única fuente de verdad es el backend
+    this.cargarUsuarioDesdeSesion().subscribe({
+      error: () => this.clearUserData(),
+    });
   }
 
   get usuario(): Usuario | null {
     return this.usuarioSubject.value;
-  }
-
-  get usuarioProfesor(): Profesor | null {
-    return this.usuarioSubject.value as Profesor | null;
-  }
-
-  // Cargar usuario desde localStorage al iniciar la app
-  private cargarUsuarioLocalStorage(): void {
-    const usuarioStr = localStorage.getItem('usuario');
-    if (usuarioStr) {
-      try {
-        const usuario = JSON.parse(usuarioStr);
-        this.usuarioSubject.next(usuario);
-        
-        // Verificar que la sesión siga válida con el backend
-        this.cargarUsuarioDesdeSesion().subscribe({
-          error: () => {
-            // Si la cookie expiró, limpiar todo
-            this.clearUserData();
-          }
-        });
-      } catch (error) {
-        console.error('Error al parsear usuario de localStorage:', error);
-        this.clearUserData();
-      }
-    }
   }
 
   // Verificar sesión con el backend
@@ -69,11 +49,11 @@ export class AuthService {
       .pipe(
         tap((user) => {
           this.usuarioSubject.next(user);
-          localStorage.setItem('usuario', JSON.stringify(user));
         }),
         catchError((error) => {
-          this.usuarioSubject.next(null);
-          localStorage.removeItem('usuario');
+          if (error.status === 401 || error.status === 403) {
+            this.clearUserData();
+          }
           return throwError(() => error);
         })
       );
@@ -88,14 +68,13 @@ export class AuthService {
       .pipe(
         tap((res) => {
           this.usuarioSubject.next(res.user);
-          localStorage.setItem('usuario', JSON.stringify(res.user));
         }),
         map((res) => res.user)
       );
   }
 
   // Registro
-  register(usuario: Usuario): Observable<Usuario> {
+  register(usuario: Partial<Usuario> & { password: string }): Observable<Usuario> {
     return this.http
       .post<Usuario>(this.URL_BASE + this.endPoints.register, usuario, {
         withCredentials: true,
@@ -103,13 +82,11 @@ export class AuthService {
       .pipe(
         tap((user) => {
           this.usuarioSubject.next(user);
-          localStorage.setItem('usuario', JSON.stringify(user));
-          console.log('Usuario registrado y guardado:', user);
         })
       );
   }
 
-  // Logout
+  // Logout (invalida la sesión en todos los dispositivos del usuario)
   logOut(): Observable<any> {
     return this.http
       .post(
@@ -117,18 +94,15 @@ export class AuthService {
         {},
         { withCredentials: true }
       )
-      .pipe(
-        tap(() => this.clearUserData())
-      );
+      .pipe(finalize(() => this.clearUserData()));
   }
 
-  // Limpiar datos del usuario
+  // Limpiar datos del usuario en memoria
   private clearUserData(): void {
     this.usuarioSubject.next(null);
-    localStorage.removeItem('usuario');
   }
 
-  // Refresh token
+  // Refresh token (normalmente no hace falta llamarlo manual, el backend auto-refresca)
   refreshToken(): Observable<any> {
     const url = this.URL_BASE + this.endPoints.refres_token;
     return this.http.post(
@@ -140,8 +114,6 @@ export class AuthService {
     );
   }
 
-  
-
   // Verificar si está logueado
   isLogged(): boolean {
     return this.usuarioSubject.value !== null;
@@ -152,13 +124,8 @@ export class AuthService {
     return this.usuarioSubject.value;
   }
 
-  // Método para establecer usuario manualmente (si lo necesitas)
+  // Método para establecer usuario manualmente (ej: tras editar perfil)
   setUsuario(usuario: Usuario | null): void {
     this.usuarioSubject.next(usuario);
-    if (usuario) {
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-    } else {
-      localStorage.removeItem('usuario');
-    }
   }
 }

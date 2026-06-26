@@ -1,56 +1,101 @@
 <ion-grid>
-  <ion-row class="ion-justify-content-center">
-    @for(profesor of profesores; track profesor.id) {
-    <ion-col size="12" size-md="6" size-lg="4">
-      <ion-card
-        class="profesor-card"
-        (click)="seleccionarProfesor(profesor)"
-        button
-      >
-        <div class="profesor-foto-wrapper">
-          <img
-            [src]="profesor.foto || './assets/imgs/default-user.png'"
-            class="profesor-foto"
-            [alt]="'Foto de ' + profesor.nombre"
-          />
-          <div class="profesor-overlay">
-            <h2>{{ profesor.nombre }} {{ profesor.apellido }}</h2>
-            @if(profesor.experiencia) {
-            <div class="experiencia">
-              <ion-icon name="school-outline" color="light"></ion-icon>
-              <span>{{ profesor.experiencia }}</span>
+  @if (loadingProfesores) {
+    <div class="loading-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+  } @else {
+    <ion-row class="ion-justify-content-center">
+      @for (profesor of profesores; track profesor.id) {
+        <ion-col size="12" size-md="6" size-lg="4">
+          <ion-card
+            class="profesor-card"
+            (click)="seleccionarProfesor(profesor)"
+          >
+            <!-- FOTO GRANDE -->
+            <div class="image-container">
+              @if (profesor.foto) {
+                <img
+                  [src]="profesor.foto"
+                  [alt]="profesor.nombre + ' ' + profesor.apellido"
+                />
+              } @else {
+                <div class="image-placeholder">
+                  <span class="placeholder-letter"
+                    >{{ profesor.nombre.charAt(0)
+                    }}{{ profesor.apellido.charAt(0) }}</span
+                  >
+                </div>
+              }
+
+              <!-- Overlay gradient para mejor legibilidad -->
+              <div class="image-overlay"></div>
+
+              <!-- RATING BADGE -->
+              @if (profesor.rating_promedio) {
+                <div class="rating-badge">
+                  <ion-icon name="star"></ion-icon>
+                  <span>{{ profesor.rating_promedio }}</span>
+                </div>
+              }
             </div>
-            }
-          </div>
-        </div>
 
-        <ion-card-content class="profesor-content">
-          <div class="materias-section">
-            <ion-icon name="book-outline" color="medium"></ion-icon>
-            <span>{{ obtenerNombresMaterias(profesor) }}</span>
-          </div>
+            <!-- INFO -->
+            <ion-card-content class="info-container">
+              <h2 class="profesor-name">
+                {{ profesor.nombre }} {{ profesor.apellido }}
+              </h2>
 
-          <div class="profesor-footer">
-            @if(profesor.precio_hora) {
-            <div class="precio">
-              <span class="precio-valor">${{ profesor.precio_hora }}</span>
-              <span class="precio-unidad">/hora</span>
-            </div>
-            }
+              <!-- Experiencia -->
+              @if (profesor.experiencia) {
+                <div class="experiencia-container">
+                  <ion-icon
+                    name="school-outline"
+                    class="experiencia-icon"
+                  ></ion-icon>
+                  <span class="experiencia-text">{{
+                    profesor.experiencia
+                  }}</span>
+                </div>
+              }
 
-            <ion-button fill="clear" size="small" class="contactar-btn">
-              <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
-              Contactar
-            </ion-button>
-          </div>
-        </ion-card-content>
-      </ion-card>
-    </ion-col>
-    } @empty {
-    <ion-col size="12" class="ion-text-center empty-state">
-      <ion-icon name="school-outline" size="large" color="medium"></ion-icon>
-      <p>No se encontraron profesores para esta materia en este momento.</p>
-    </ion-col>
-    }
-  </ion-row>
+              <!-- Materias -->
+              <div class="materias-container">
+                <ion-icon name="book-outline" class="materias-icon"></ion-icon>
+                <span class="materias-text">{{
+                  obtenerNombresMaterias(profesor)
+                }}</span>
+              </div>
+
+              <!-- Footer con precio y botón -->
+              <div class="card-footer">
+                @if (profesor.precio_hora) {
+                  <div class="precio-tag">
+                    <ion-icon name="cash-outline"></ion-icon>
+                    <span class="precio-valor"
+                      >${{ profesor.precio_hora }}</span
+                    >
+                    <span class="precio-unidad">/hora</span>
+                  </div>
+                }
+
+                <ion-button size="small" class="ver-perfil-btn">
+                  Ver perfil
+                  <ion-icon slot="end" name="arrow-forward"></ion-icon>
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      } @empty {
+        <ion-col size="12" class="ion-text-center empty-state">
+          <ion-icon
+            name="school-outline"
+            size="large"
+            color="medium"
+          ></ion-icon>
+          <p>No se encontraron profesores para esta materia en este momento.</p>
+        </ion-col>
+      }
+    </ion-row>
+  }
 </ion-grid>

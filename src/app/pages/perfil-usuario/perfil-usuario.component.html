@@ -1,10 +1,21 @@
 <ion-header>
   <ion-toolbar>
     <ion-back-button slot="start" defaultHref="/home"></ion-back-button>
-    <ion-title>{{ modoEdicion() ? 'Mi Perfil' : 'Perfil del Usuario' }}</ion-title>
+    <ion-title>{{
+      modoEdicion() ? "Mi Perfil" : "Perfil del Usuario"
+    }}</ion-title>
     @if(modoEdicion()) {
-    <ion-button slot="end" fill="clear" (click)="guardarCambios()" [disabled]="!haycambios">
-      <ion-icon name="checkmark-circle-outline" style="font-size: 1.5rem;"></ion-icon>
+
+    <ion-button
+      slot="end"
+      fill="clear"
+      (click)="guardarCambios()"
+      [disabled]="!haycambios"
+    >
+      <ion-icon
+        name="checkmark-circle-outline"
+        style="font-size: 1.5rem"
+      ></ion-icon>
     </ion-button>
     }
   </ion-toolbar>
@@ -12,46 +23,64 @@
 
 <ion-content>
   @if(usuario) {
-  
+
   <div class="profile-container">
     <!-- Header con foto de fondo -->
-    <div class="profile-header" [style.background-image]="'url(' + (usuario.fotoPerfil || './assets/imgs/default-user.png') + ')'">
+    <div
+      class="profile-header"
+      [style.background-image]="
+        'url(' + (usuario.fotoPerfil || './assets/imgs/default-user.png') + ')'
+      "
+    >
       @if(modoEdicion()) {
       <div class="edit-badge">✏️ Mi Perfil</div>
       <button class="photo-edit-btn" (click)="editarFoto()">
         <ion-icon name="camera"></ion-icon>
       </button>
       }
-      
+
       <h1 class="profile-name">{{ usuario.nombre }} {{ usuario.apellido }}</h1>
     </div>
 
     <!-- Contenido -->
     <div class="profile-content">
-      
       <!-- Nombre y Apellido -->
       <div class="info-section">
         <div class="section-header">
           <div class="section-title">Nombre Completo</div>
           @if(modoEdicion() && !editandoNombre) {
-          <ion-icon name="create-outline" class="edit-icon" (click)="editarNombre()"></ion-icon>
+          <ion-icon
+            name="create-outline"
+            class="edit-icon"
+            (click)="editarNombre()"
+          ></ion-icon>
           }
         </div>
-        
+
         @if(!editandoNombre) {
         <p class="section-text">{{ usuario.nombre }} {{ usuario.apellido }}</p>
         } @else {
         <div class="edit-form">
           <div class="input-group">
             <label>Nombre</label>
-            <input type="text" [(ngModel)]="usuario.nombre" class="edit-input" />
+            <input
+              type="text"
+              [(ngModel)]="usuario.nombre"
+              class="edit-input"
+            />
           </div>
           <div class="input-group">
             <label>Apellido</label>
-            <input type="text" [(ngModel)]="usuario.apellido" class="edit-input" />
+            <input
+              type="text"
+              [(ngModel)]="usuario.apellido"
+              class="edit-input"
+            />
           </div>
           <div class="edit-actions">
-            <button class="btn-cancel" (click)="cancelarEdicionNombre()">Cancelar</button>
+            <button class="btn-cancel" (click)="cancelarEdicionNombre()">
+              Cancelar
+            </button>
             <button class="btn-save" (click)="guardarNombre()">Guardar</button>
           </div>
         </div>
@@ -63,10 +92,14 @@
         <div class="section-header">
           <div class="section-title">Email</div>
           @if(modoEdicion() && !editandoEmail) {
-          <ion-icon name="create-outline" class="edit-icon" (click)="editarEmail()"></ion-icon>
+          <ion-icon
+            name="create-outline"
+            class="edit-icon"
+            (click)="editarEmail()"
+          ></ion-icon>
           }
         </div>
-        
+
         @if(!editandoEmail) {
         <div class="contact-info">
           <div class="contact-item">
@@ -78,10 +111,16 @@
         <div class="edit-form">
           <div class="input-group">
             <label>Email</label>
-            <input type="email" [(ngModel)]="usuario.email" class="edit-input" />
+            <input
+              type="email"
+              [(ngModel)]="usuario.email"
+              class="edit-input"
+            />
           </div>
           <div class="edit-actions">
-            <button class="btn-cancel" (click)="cancelarEdicionEmail()">Cancelar</button>
+            <button class="btn-cancel" (click)="cancelarEdicionEmail()">
+              Cancelar
+            </button>
             <button class="btn-save" (click)="guardarEmail()">Guardar</button>
           </div>
         </div>
@@ -93,26 +132,39 @@
         <div class="section-header">
           <div class="section-title">Teléfono</div>
           @if(modoEdicion() && !editandoTelefono) {
-          <ion-icon name="create-outline" class="edit-icon" (click)="editarTelefono()"></ion-icon>
+          <ion-icon
+            name="create-outline"
+            class="edit-icon"
+            (click)="editarTelefono()"
+          ></ion-icon>
           }
         </div>
-        
+
         @if(!editandoTelefono) {
         <div class="contact-info">
           <div class="contact-item">
             <ion-icon name="call-outline"></ion-icon>
-            <span>{{ usuario.telefono || 'No especificado' }}</span>
+            <span>{{ usuario.telefono || "No especificado" }}</span>
           </div>
         </div>
         } @else {
         <div class="edit-form">
           <div class="input-group">
             <label>Teléfono</label>
-            <input type="tel" [(ngModel)]="usuario.telefono" class="edit-input" placeholder="Ingrese su teléfono" />
+            <input
+              type="tel"
+              [(ngModel)]="usuario.telefono"
+              class="edit-input"
+              placeholder="Ingrese su teléfono"
+            />
           </div>
           <div class="edit-actions">
-            <button class="btn-cancel" (click)="cancelarEdicionTelefono()">Cancelar</button>
-            <button class="btn-save" (click)="guardarTelefono()">Guardar</button>
+            <button class="btn-cancel" (click)="cancelarEdicionTelefono()">
+              Cancelar
+            </button>
+            <button class="btn-save" (click)="guardarTelefono()">
+              Guardar
+            </button>
           </div>
         </div>
         }
@@ -120,17 +172,76 @@
     </div>
 
     <!-- Botones de acción -->
-    @if(!modoEdicion()) {
     <div class="profile-actions">
-      <ion-button class="action-btn secondary" [href]="'mailto:' + usuario.email">
-        <ion-icon name="mail-outline" slot="start"></ion-icon>
-        Enviar Email
+      <!-- 👇 BOTÓN FAVORITOS -->
+      <ion-button
+        class="action-btn favorite-toggle"
+        fill="outline"
+        (click)="toggleFavoritos()"
+      >
+        <ion-icon
+          slot="start"
+          [name]="mostrarFavoritos ? 'heart' : 'heart-outline'"
+        ></ion-icon>
+        {{
+          mostrarFavoritos ? "Ocultar favoritos" : "Ver profesores favoritos"
+        }}
       </ion-button>
     </div>
-    }
   </div>
 
-  } @else {
+  @if(mostrarFavoritos) {
+  <section class="ranking-section" id="favoritos-section">
+    <h2 class="section-title">
+      <ion-icon name="star-outline"></ion-icon>
+      Mis profesores Favoritos
+    </h2>
+
+    <div class="profesores-scroll">
+      @for (profe of favoritos; track $index) {
+      <ion-card class="profe-card-large" (click)="seleccionarProfesor(profe)">
+        <!-- FOTO GRANDE -->
+        <div class="image-container">
+          @if (profe.foto) {
+          <img [src]="profe.foto" alt="{{ profe.nombre }}" />
+          } @else {
+          <div class="image-placeholder">
+            <span class="placeholder-letter">{{ profe.nombre.charAt(0) }}</span>
+          </div>
+          }
+
+          <!-- Overlay gradient para mejor legibilidad -->
+          <div class="image-overlay"></div>
+
+          <div class="rating-badge">
+            <ion-icon name="star"></ion-icon>
+            <span>{{ profe.rating_promedio }}</span>
+          </div>
+        </div>
+
+        <!-- INFO -->
+        <ion-card-content class="info-container">
+          <h2 class="profe-name">{{ profe.nombre }}</h2>
+
+          <div class="materias-container">
+            <ion-icon name="book-outline" class="materias-icon"></ion-icon>
+            <span class="materias-text">{{
+              obtenerNombresMaterias(profe)
+            }}</span>
+          </div>
+
+          <div class="card-footer">
+            <ion-button size="small" class="ver-perfil-btn">
+              Ver perfil
+              <ion-icon slot="end" name="arrow-forward"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+      }
+    </div>
+  </section>
+  } } @else {
   <div class="loading-state">
     <ion-spinner name="crescent"></ion-spinner>
     <p>Cargando...</p>

@@ -1,84 +1,337 @@
 .profesor-card {
-  border-radius: 20px;
+  width: 100%;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
-  background: #ffffffd1;
-  backdrop-filter: blur(6px);
-  border: 1px solid #0d4d4d;
+  background: white;
+  box-shadow: 
+    0 4px 12px rgba(13, 77, 77, 0.08),
+    0 12px 32px rgba(13, 77, 77, 0.12);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  margin: 0;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      0 8px 20px rgba(13, 77, 77, 0.12),
+      0 16px 48px rgba(13, 77, 77, 0.18);
+  }
+
+  &:active {
+    transform: translateY(-4px);
+  }
 }
 
-.profesor-card:hover {
-  transform: translateY(-4px);
-  border-color: #008080;
-}
-
-.profesor-foto-wrapper {
+/* ==========================================
+   CONTENEDOR DE IMAGEN
+   ========================================== */
+.image-container {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 220px;
+  background: linear-gradient(135deg, #0d4d4d 0%, #117070 100%);
   overflow: hidden;
-  border-bottom: 3px solid #0d4d4d;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // Efecto hover en imagen
+  .profesor-card:hover & img {
+    transform: scale(1.08);
+  }
 }
 
-.profesor-foto {
+/* Overlay gradient sutil */
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.05) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ==========================================
+   PLACEHOLDER DE IMAGEN
+   ========================================== */
+.image-placeholder {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background: linear-gradient(135deg, #0d4d4d 0%, #147878 50%, #0d4d4d 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  // Patrón decorativo de fondo
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.1) 1px,
+      transparent 1px
+    );
+    background-size: 30px 30px;
+    opacity: 0.3;
+  }
 }
 
-.profesor-overlay {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 16px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+.placeholder-letter {
+  font-size: 80px;
   color: white;
+  font-weight: 800;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
-.profesor-overlay h2 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: bold;
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
-.experiencia {
+/* ==========================================
+   RATING BADGE
+   ========================================== */
+.rating-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(13, 77, 77, 0.92);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 7px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  transition: transform 0.2s ease;
+
+  ion-icon {
+    color: #0d4d4d;
+    font-size: 16px;
+  }
+
+  .profesor-card:hover & {
+    transform: scale(1.05);
+  }
 }
 
-.profesor-content {
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.85);
-}
-
-.materias-section {
-  font-size: 0.9rem;
-  color: #444;
-  margin-bottom: 12px;
-}
-
-.profesor-footer {
+/* ==========================================
+   CONTENIDO DE LA TARJETA
+   ========================================== */
+.info-container {
+  padding: 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #0d4d4d;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.precio {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-.contactar-btn {
-  --color: #3880ff;
-  --padding-start: 0;
-}
-
-p {
+.profesor-name {
+  font-size: 19px;
+  font-weight: 700;
   color: #0d4d4d;
+  margin: 0;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+}
+
+/* ==========================================
+   EXPERIENCIA
+   ========================================== */
+.experiencia-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #f0f9f9 0%, #e6f5f5 100%);
+  border-radius: 10px;
+  border-left: 3px solid #0d4d4d;
+}
+
+.experiencia-icon {
+  color:#0d4d4d;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.experiencia-text {
+  font-size: 13px;
+  color: #0d4d4d;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ==========================================
+   MATERIAS
+   ========================================== */
+.materias-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #f0f9f9 0%, #e6f5f5 100%);
+  border-radius: 12px;
+  border-left: 3px solid #0d4d4d;
+}
+
+.materias-icon {
+  color: #0d4d4d;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.materias-text {
+  font-size: 13px;
+  color: #0d4d4d;
+  font-weight: 500;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ==========================================
+   FOOTER Y ELEMENTOS
+   ========================================== */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.precio-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-radius: 12px;
+  border-left: 3px solid #0d4d4d;
+
+  ion-icon {
+    color: #0d4d4d;
+    font-size: 18px;
+  }
+}
+
+.precio-valor {
+  font-size: 16px;
+  font-weight: 700;
+  color:#0d4d4d;
+}
+
+.precio-unidad {
+  font-size: 12px;
+  font-weight: 500;
+  color: #0d4d4d;
+  opacity: 0.8;
+}
+p{
+  color: #0d4d4d;
+
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px; // O el alto que necesites
+  width: 100%;
+
+  ion-spinner {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.ver-perfil-btn {
+  --background: #0d4d4d;
+  --background-hover: #0a3d3d;
+  --background-activated: #073030;
+  --border-radius: 14px;
+  --padding-start: 18px;
+  --padding-end: 18px;
+  --box-shadow: 0 4px 12px rgba(13, 77, 77, 0.25);
+  
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  text-transform: none;
+  transition: all 0.3s ease;
+  margin: 0;
+  flex-shrink: 0;
+  color: white;
+
+  ion-icon {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover ion-icon {
+    transform: translateX(4px);
+  }
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 768px) {
+  .image-container {
+    height: 200px;
+  }
+
+  .placeholder-letter {
+    font-size: 70px;
+  }
+
+  .card-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ver-perfil-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .image-container {
+    height: 180px;
+  }
+
+  .placeholder-letter {
+    font-size: 60px;
+  }
+
+  .info-container {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .profesor-name {
+    font-size: 17px;
+  }
 }

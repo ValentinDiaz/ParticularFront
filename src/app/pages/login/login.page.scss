@@ -30,13 +30,6 @@ ion-content {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    135deg,
-    transparent 49.5%,
-    #4dd0e1 49.5%,
-    #4dd0e1 50.5%,
-    transparent 50.5%
-  );
   box-shadow: 0 0 30px rgba(77, 208, 225, 0.5);
 }
 
@@ -56,7 +49,6 @@ ion-content {
   justify-content: center;
   padding: 0px;
   position: relative;
-
 }
 
 .logo-section::before {
@@ -314,8 +306,8 @@ button[type="submit"]:disabled {
     background: linear-gradient(
       180deg,
       #0d4d4d 0%,
-      #1a6666 45%,
-      #ffffff 45%,
+      #1a6666 22%,
+      #ffffff 22%,
       #ffffff 100%
     );
   }
@@ -323,10 +315,10 @@ button[type="submit"]:disabled {
   .diagonal-background::before {
     background: linear-gradient(
       180deg,
-      transparent 44.5%,
-      #4dd0e1 44.5%,
-      #4dd0e1 45.5%,
-      transparent 45.5%
+      transparent 21.5%,
+      #4dd0e1 21.5%,
+      #4dd0e1 22.5%,
+      transparent 22.5%
     );
   }
 
@@ -335,33 +327,59 @@ button[type="submit"]:disabled {
   }
 
   .logo-section {
-    flex: 0 0 45%;
-    padding: 20px;
+    flex: 0 0 22%;
+    padding: 15px 0 5px 0;
+  }
+
+  .logo-section::before {
+    width: 250px;
+    height: 250px;
+    top: -125px;
+    right: -125px;
   }
 
   .logo-image {
-    width: 120px;
-    height: 120px;
+    width: 220px;
+    height: 110px;
   }
 
   .brand-name {
-    font-size: 28px;
+    font-size: 22px;
   }
 
   .brand-tagline {
-    font-size: 14px;
+    display: none;
+    font-size: 12px;
+    margin-bottom: 15px;
   }
 
   .login-section {
-    flex: 0 0 55%;
-    padding: 20px;
+    flex: 0 0 78%;
+    justify-content: flex-start;
+    padding-top: 10px;
   }
 
   form {
-    padding: 30px 20px;
+    padding: 30px 24px;
+    max-width: 100%;
   }
 
   h2 {
-    font-size: 24px;
+    font-size: 22px;
+    margin-bottom: 24px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    padding: 14px;
+  }
+
+  button[type="submit"] {
+    padding: 14px;
+    font-size: 15px;
   }
 }

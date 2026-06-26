@@ -1,20 +1,27 @@
-
-  <ion-grid>
+<ion-grid>
+  @if (loadingNiveles) {
+    <div class="loading-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+  } @else {
     <ion-row class="ion-justify-content-center">
-      @for(nivel of niveles; track nivel.nombre) {
-        <ion-col size="6" size-md="4" size-lg="3">
+      @for (nivel of niveles; track nivel.nombre) {
+        <ion-col size="12" size-sm="6" size-md="4" size-lg="3">
           <ion-card (click)="seleccionarNivel(nivel)" class="nivel-card">
             <ion-card-content class="ion-text-center">
+              <div class="nivel-icon">
+                <ion-icon name="school-outline"></ion-icon>
+              </div>
               <h3>{{ nivel.nombre }}</h3>
             </ion-card-content>
           </ion-card>
         </ion-col>
-      }
 
-      @empty {
+      } @empty {
         <ion-col size="12" class="ion-text-center">
-          <p>No hay niveles para mostrar</p>
+          <p class="mensaje-vacio">No hay niveles para mostrar</p>
         </ion-col>
       }
     </ion-row>
-  </ion-grid>
+  }
+</ion-grid>

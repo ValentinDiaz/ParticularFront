@@ -1,62 +1,304 @@
-<ion-header class="ion-padding header-content">
+<ion-header class="ion-no-border">
   <ion-toolbar color="turquesa">
-
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-
-    <ion-title class="main-title">
-      Encuentra tu profesor particular ideal
-    </ion-title>
-
-  </ion-toolbar>
-
-  <ion-toolbar class="subtitle-toolbar" color="turquesa">
-    <p class="subtitle-text">
-      Conecta con profesores de Tandil. Clases personalizadas, horarios flexibles
-      y resultados garantizados.
-    </p>
+    <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content class="contenido-inicio">
+  <!-- 🎯 Hero Section - Presentación principal -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Encuentra tu profesor<br />
+        <span class="highlight">ideal en Tandil</span>
+      </h1>
+      <p class="hero-subtitle">
+        Clases personalizadas, horarios flexibles y resultados garantizados
+      </p>
 
-  <!-- 🔍 Buscar profesor -->
-  <div class="buscar-profesor" (click)="irABuscarProfesor()">
-    <section>
-      <h2>🔍 Busca un profe</h2>
-    </section>
-  </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number">500+</span>
+          <span class="stat-label">Profesores</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Materias</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">4.8</span>
+          <span class="stat-label">
+            <ion-icon name="star"></ion-icon>
+            Rating
+          </span>
+        </div>
+      </div>
 
-  <!-- 🌟 Mejores profesores -->
-  <section class="ranking-profesores">
-    <h2 class="seccion-titulo">🌟 Profesores mejor valorados</h2>
+      <button class="cta-button" (click)="irABuscarProfesor()">
+        <ion-icon name="search-outline" class="button-icon"></ion-icon>
+        Buscar mi profesor ahora
+        <ion-icon name="arrow-forward" class="button-arrow"></ion-icon>
+      </button>
+    </div>
 
-    <ion-card *ngFor="let profe of mejoresProfesores" class="profe-card">
-      <ion-card-header>
-        <ion-card-title>{{ profe.nombre }}</ion-card-title>
-        <ion-card-subtitle>{{ profe.materia }}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        ⭐ {{ profe.puntuacion }} / 5 - {{ profe.cantidadOpiniones }} opiniones
-      </ion-card-content>
-    </ion-card>
+    <div class="hero-decoration">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+    </div>
   </section>
 
-  <!-- 📚 Materias más buscadas -->
-  <section class="ranking-profesores">
-    <h2 class="seccion-titulo">📚 Materias más buscadas</h2>
+  <!-- 📖 Cómo funciona -->
+  <section class="how-it-works">
+    <h2 class="section-title">
+      <ion-icon name="help-circle-outline"></ion-icon>
+      ¿Cómo funciona?
+    </h2>
 
-    <ion-card *ngFor="let profe of mejoresProfesores" class="profe-card">
-      <ion-card-header>
-        <ion-card-title>{{ profe.nombre }}</ion-card-title>
-        <ion-card-subtitle>{{ profe.materia }}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        ⭐ {{ profe.puntuacion }} / 5 - {{ profe.cantidadOpiniones }} opiniones
-      </ion-card-content>
-    </ion-card>
+    <div class="steps-container">
+      <div class="step-card">
+        <ion-icon name="search-outline" class="step-icon"></ion-icon>
+        <h3>1. Busca</h3>
+        <p>Encuentra profesores por materia, precio o disponibilidad</p>
+      </div>
+
+      <div class="step-card">
+        <ion-icon name="chatbubbles-outline" class="step-icon"></ion-icon>
+        <h3>2. Contacta</h3>
+        <p>Chatea directamente con tu profesor ideal</p>
+      </div>
+
+      <div class="step-card">
+        <ion-icon name="school-outline" class="step-icon"></ion-icon>
+        <h3>3. Aprende</h3>
+        <p>Agenda tu clase y comienza a aprender</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <ion-icon name="person-outline" class="step-icon"></ion-icon>
+      <h3>Creá tu usuario</h3>
+      <p>
+        Para ser profesor, <b>primero necesitas una cuenta personal</b>.
+        Registrate gratis desde la pagina de login y luego activa tu perfil
+        docente desde el menu izquierdo precionando "hacete profe".
+      </p>
+    </div>
   </section>
 
+  <section class="ranking-section">
+    <h2 class="section-title">
+      <ion-icon name="star-outline"></ion-icon>
+      Profesores destacados
+    </h2>
+
+    <div class="carousel-wrapper">
+      @if(loadingMaterias) {
+      <div class="loading-container">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+      }
+      <!-- FLECHA IZQUIERDA -->
+      <button
+        class="carousel-arrow carousel-arrow-left"
+        (click)="scrollCarousel('left')"
+        #leftArrow
+      >
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+
+      <!-- CONTENEDOR DE TARJETAS -->
+      <div class="profesores-scroll" #carouselContainer>
+        @for (profe of mejoresProfesores; track $index) {
+        <ion-card class="profe-card-large" (click)="seleccionarProfesor(profe)">
+          <!-- FOTO GRANDE -->
+          <div class="image-container">
+            @if (profe.foto) {
+            <img [src]="profe.foto" alt="{{ profe.nombre }}" />
+            } @else {
+            <div class="image-placeholder">
+              <span class="placeholder-letter"
+                >{{ profe.nombre.charAt(0) }}</span
+              >
+            </div>
+            }
+
+            <!-- Overlay gradient -->
+            <div class="image-overlay"></div>
+
+            <div class="profe-badge">
+              <ion-icon name="trophy"></ion-icon>
+              <span>TOP</span>
+            </div>
+
+            <div class="rating-badge">
+              <ion-icon name="star"></ion-icon>
+              <span>{{ profe.rating_promedio }}</span>
+            </div>
+          </div>
+
+          <!-- INFO -->
+          <ion-card-content class="info-container">
+            <h2 class="profe-name">{{ profe.nombre }}</h2>
+
+            <div class="materias-container">
+              <ion-icon name="book-outline" class="materias-icon"></ion-icon>
+              <span class="materias-text"
+                >{{ obtenerNombresMaterias(profe) }}</span
+              >
+            </div>
+
+            <div class="card-footer">
+              <ion-button size="small" class="ver-perfil-btn">
+                Ver perfil
+                <ion-icon slot="end" name="arrow-forward"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+        }
+      </div>
+
+      <!-- FLECHA DERECHA -->
+      <button
+        class="carousel-arrow carousel-arrow-right"
+        (click)="scrollCarousel('right')"
+        #rightArrow
+      >
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+    </div>
+
+    <!-- INDICADORES DE PAGINACIÓN (Opcional) -->
+  </section>
+
+  <!-- 📚 Materias populares -->
+  <!-- home.page.html -->
+
+  <!-- Tu contenido existente del home... -->
+
+  <!-- Sección de materias populares -->
+  <section class="seccion-materias">
+    <div class="section-header">
+      <h2 class="section-title">Materias populares</h2>
+    </div>
+
+    @if(loadingProfesores) {
+    <div class="loading-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+    } @else {
+    <div class="materias-grid">
+      @for(materia of materiasDestacadas; track materia.id) {
+      <div
+        class="materia-chip"
+        [class.selected]="materiaSeleccionada?.id === materia.id"
+        (click)="verProfesoresMateria(materia)"
+      >
+        {{ materia.nombre }}
+      </div>
+      } @empty {
+      <div class="mensaje-vacio">
+        <ion-icon name="school-outline"></ion-icon>
+        <p>No hay materias disponibles</p>
+      </div>
+      }
+    </div>
+    }
+  </section>
+
+  <!-- Sección de profesores de la materia seleccionada -->
+  @if(materiaSeleccionada) {
+  <section class="seccion-profesores-materia">
+    <ion-icon
+      name="close-circle-outline"
+      class="btn-volver"
+      (click)="cerrarSeccionProfesores()"
+    >
+    </ion-icon>
+
+    <div class="profesores-wrapper">
+      <app-profesores
+        [materiaSeleccionada]="materiaSeleccionada"
+      ></app-profesores>
+    </div>
+  </section>
+  }
+
+  <ion-footer class="ion-no-border custom-footer">
+    <ion-toolbar class="footer-content">
+      <ion-grid>
+        <ion-row class="main-row">
+          <ion-col size="12" size-md="5" class="brand-col">
+            <div class="brand-info">
+              <h3 class="footer-logo">TandilClases</h3>
+              <p class="footer-desc">
+                Conectamos estudiantes con los mejores profesores particulares
+                de la ciudad. Aprendé a tu ritmo.
+              </p>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" size-md="3">
+            <h4 class="footer-title">Explorar</h4>
+            <ul class="footer-links">
+              <li><a routerLink="/home">Inicio</a></li>
+              <li><a routerLink="/buscar">Buscar Profes</a></li>
+              <li><a routerLink="/registro-profesor">Dar Clases</a></li>
+              <li><a routerLink="/ayuda">Ayuda</a></li>
+            </ul>
+          </ion-col>
+
+          <ion-col size="6" size-md="4">
+            <h4 class="footer-title">Seguinos</h4>
+            <div class="social-icons">
+              <ion-button
+                fill="clear"
+                class="social-btn"
+                href="#"
+                target="_blank"
+              >
+              <ion-icon name="logo-instagram"></ion-icon>
+              </ion-button>
+              <ion-button
+                fill="clear"
+                class="social-btn"
+                href="#"
+                target="_blank"
+              >
+                <ion-icon name="logo-facebook"></ion-icon>
+              </ion-button>
+              <ion-button
+                fill="clear"
+                class="social-btn"
+                href="#"
+                target="_blank"
+              >
+                <ion-icon name="logo-whatsapp"></ion-icon>
+              </ion-button>
+            </div>
+
+            <p class="contact-mail">hola&#64;tandilclases.com</p>
+          </ion-col>
+        </ion-row>
+
+        <ion-item-divider class="footer-divider"></ion-item-divider>
+
+        <ion-row class="bottom-row ion-align-items-center">
+          <ion-col size="12" size-md="6">
+            <p class="copyright">
+              2026 TandilClases. Todos los derechos reservados.
+            </p>
+          </ion-col>
+          <ion-col size="12" size-md="6" class="legal-links">
+            <a href="#">Términos y Condiciones</a>
+            <span class="separator">•</span>
+            <a href="#">Privacidad</a>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-toolbar>
+  </ion-footer>
 </ion-content>

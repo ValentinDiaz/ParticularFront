@@ -2,138 +2,1093 @@ ion-content {
   --background: white;
   padding: auto;
 }
+ion-toolbar {
+  --background: none;
+  background: #0d4d4d;
+  --color: white;
+  position: relative;
+  min-height: 56px;
+}
 
-.header-content {
-  background: #0d4d4d; // turquesa oscuro
+.contenido-inicio {
+  --background: #f8f9fa;
+}
+
+/* 🎯 HERO SECTION */
+.hero-section {
+  position: relative;
+  background: linear-gradient(135deg, #0d4d4d 0%, #1a6666 100%);
+  padding: 60px 20px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 15px 0;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.highlight {
+  background: linear-gradient(45deg, #4dd0e1, #26a69a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 30px 0;
+  line-height: 1.6;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+.stat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  padding: 0px 0;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.main-title {
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin-bottom: 10px;
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4dd0e1;
+  line-height: 1;
 }
 
-.subtitle-text {
+.stat-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 5px;
+}
+
+.cta-button {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 18px 40px;
   font-size: 1.1rem;
-  color: #ffffff;
-  margin: 0 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+  transition: all 0.3s ease;
+  margin-top: 20px;
 }
-.contenido-inicio {
-  --background: #ffffff;
 
-  .buscar-profesor {
-    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-    border-radius: 20px;
-    padding: 30px;
-    margin: 30px 20px 40px 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 15px 35px rgba(255, 107, 107, 0.3);
-    position: relative;
-    overflow: hidden;
-    animation: float 3s ease-in-out infinite;
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+}
 
-    // Efecto shimmer/brillo deslizante
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-      );
-      transition: left 0.5s;
-    }
+.button-icon {
+  font-size: 1.5rem;
+}
 
-    // Efectos hover
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(255, 107, 107, 0.4);
+.button-arrow {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
 
-      &::before {
-        left: 100%;
-      }
-    }
+.cta-button:hover .button-arrow {
+  transform: translateX(5px);
+}
 
-    // Estilos del texto
-    h2 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      margin: 0;
+/* Decoración de fondo */
+.hero-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(77, 208, 225, 0.1);
+  animation: float-circle 20s infinite ease-in-out;
+}
+
+.circle-1 {
+  width: 300px;
+  height: 300px;
+  top: -100px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.circle-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -50px;
+  left: -50px;
+  animation-delay: 5s;
+}
+
+.circle-3 {
+  width: 150px;
+  height: 150px;
+  top: 50%;
+  left: 10%;
+  animation-delay: 10s;
+}
+
+@keyframes float-circle {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* 📖 CÓMO FUNCIONA */
+.how-it-works {
+  padding: 40px 20px;
+  background: white;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0d4d4d;
+  text-align: center;
+  margin: 0 0 30px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.section-title ion-icon {
+  font-size: 2rem;
+  color: #4dd0e1;
+}
+
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.step-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.step-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(13, 77, 77, 0.15);
+  border-color: #4dd0e1;
+}
+
+.step-icon {
+  font-size: 4rem;
+  margin-bottom: 15px;
+  color: #0d4d4d;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.step-card h3 {
+  font-size: 1.3rem;
+  color: #0d4d4d;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.step-card p {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ranking-section {
+  padding: 40px 20px;
+  background: #f8f9fa;
+  position: relative;
+
+  ion-icon {
+    color: #0d4d4d;
+  }
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #0d4d4d;
+  margin-bottom: 24px;
+  padding: 0 20px;
+
+  ion-icon {
+    font-size: 32px;
+  }
+}
+.materia-chip.selected {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ==========================================
+   CAROUSEL WRAPPER
+   ========================================== */
+.carousel-wrapper {
+  position: relative;
+  padding: 0 60px; /* Espacio para las flechas */
+}
+
+/* ==========================================
+   CONTENEDOR DE SCROLL
+   ========================================== */
+.profesores-scroll {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 24px;
+  padding: 16px 20px 32px 20px;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  /* Ocultar scrollbar */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ==========================================
+   FLECHAS DE NAVEGACIÓN
+   ========================================== */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #0d4d4d;
+  color: #0d4d4d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(13, 77, 77, 0.15);
+
+  ion-icon {
+    font-size: 24px;
+    color: #0d4d4d;
+  }
+
+  &:hover {
+    background: #0d4d4d;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(13, 77, 77, 0.25);
+
+    ion-icon {
       color: white;
     }
   }
 
-  // Animación de flotación
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
+  &:active {
+    transform: translateY(-50%) scale(0.95);
   }
 
-  // Responsive para móviles
-  @media (max-width: 768px) {
-    .buscar-profesor {
-      margin: 20px 15px 30px 15px;
-      padding: 25px 20px;
+  /* Deshabilitar cuando no hay más scroll */
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
 
-      h2 {
-        font-size: 1.8rem;
+.carousel-arrow-left {
+  left: 0;
+}
+
+.carousel-arrow-right {
+  right: 0;
+}
+
+/* ==========================================
+   INDICADORES DE PAGINACIÓN
+   ========================================== */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px; // O el alto que necesites
+  width: 100%;
+
+  ion-spinner {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d1d1d1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.active {
+    width: 24px;
+    border-radius: 4px;
+    background: #0d4d4d;
+  }
+
+  &:hover {
+    background: #0d4d4d;
+    opacity: 0.7;
+  }
+}
+
+/* ==========================================
+   TARJETA PRINCIPAL
+   ========================================== */
+.profe-card-large {
+  width: 320px;
+  min-width: 320px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: white;
+  box-shadow:
+    0 4px 12px rgba(13, 77, 77, 0.08),
+    0 12px 32px rgba(13, 77, 77, 0.12);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  scroll-snap-align: start;
+  display: flex; // AÑADIR
+  flex-direction: column; // AÑADIR
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow:
+      0 8px 20px rgba(13, 77, 77, 0.12),
+      0 16px 48px rgba(13, 77, 77, 0.18);
+  }
+
+  &:active {
+    transform: translateY(-4px);
+  }
+}
+
+/* ==========================================
+   CONTENEDOR DE IMAGEN
+   ========================================== */
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(135deg, #0d4d4d 0%, #117070 100%);
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // Efecto hover en imagen
+  .profe-card-large:hover & img {
+    transform: scale(1.08);
+  }
+}
+
+/* Overlay gradient sutil */
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.05) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ==========================================
+   PLACEHOLDER DE IMAGEN
+   ========================================== */
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0d4d4d 0%, #147878 50%, #0d4d4d 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  // Patrón decorativo de fondo
+  &::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.1) 1px,
+      transparent 1px
+    );
+    background-size: 30px 30px;
+    opacity: 0.3;
+  }
+}
+
+.placeholder-letter {
+  font-size: 80px;
+  color: white;
+  font-weight: 800;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ==========================================
+   BADGES
+   ========================================== */
+.profe-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  color: #0d4d4d;
+  padding: 7px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+  transition: transform 0.2s ease;
+
+  ion-icon {
+    color: #ffb800;
+    font-size: 16px;
+  }
+
+  span {
+    letter-spacing: 0.5px;
+  }
+
+  .profe-card-large:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.rating-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(13, 77, 77, 0.92);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 7px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  transition: transform 0.2s ease;
+
+  ion-icon {
+    color: #ffd700;
+    font-size: 16px;
+  }
+
+  .profe-card-large:hover & {
+    transform: scale(1.05);
+  }
+}
+
+/* ==========================================
+   CONTENIDO DE LA TARJETA
+   ========================================== */
+.info-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1; // AÑADIR - ocupa todo el espacio disponible
+}
+
+.profe-name {
+  font-size: 19px;
+  font-weight: 700;
+  color: #0d4d4d;
+  margin: 0;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+}
+
+/* ==========================================
+   MATERIAS
+   ========================================== */
+.materias-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #f0f9f9 0%, #e6f5f5 100%);
+  border-radius: 12px;
+  border-left: 3px solid #0d4d4d;
+}
+
+.materias-icon {
+  color: #0d4d4d;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.materias-text {
+  font-size: 13px;
+  color: #0d4d4d;
+  font-weight: 500;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ==========================================
+   FOOTER Y BOTÓN
+   ========================================== */
+card-footer {
+  display: flex;
+  justify-content: flex-start; // Alinea a la izquierda
+  margin-top: auto; // AÑADIR - empuja hacia abajo
+}
+
+.ver-perfil-btn {
+  --background: #0d4d4d;
+  --background-hover: #0a3d3d;
+  --background-activated: #073030;
+  --border-radius: 14px;
+  --padding-start: 18px;
+  --padding-end: 18px;
+  --box-shadow: 0 4px 12px rgba(13, 77, 77, 0.25);
+
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  text-transform: none;
+  transition: all 0.3s ease;
+  color: white;
+  margin-top: 20px;
+
+  ion-icon {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover ion-icon {
+    transform: translateX(4px);
+  }
+}
+
+/* MATERIAS */
+.materias-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.materias-container span {
+  font-size: 13px;
+  color: #0d4d4d !important;
+}
+
+.materia-chip {
+  background: rgba(13, 77, 77, 0.1);
+  color: #0d4d4d;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* FOOTER */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-count {
+  font-size: 13px;
+  color: #0d4d4d;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* BOTÓN */
+.boton-card {
+  color: #0d4d4d;
+}
+
+.seccion-materias {
+  padding-bottom: 30px;
+}
+
+/* ==========================================
+   FOOTER PROFESIONAL - TANDILCLASES
+   ========================================== */
+
+.custom-footer {
+  --background: linear-gradient(135deg, #0d4d4d 0%, #1a6666 100%);
+  margin-top: 60px;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4dd0e1 0%, #26a69a 50%, #4dd0e1 100%);
+    background-size: 200% 100%;
+    animation: gradientFlow 3s linear infinite;
+  }
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.footer-content {
+  --background: transparent;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+ion-grid {
+  padding: 50px 20px 30px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ==========================================
+   BRAND SECTION
+   ========================================== */
+.brand-col {
+  display: flex;
+  align-items: flex-start;
+}
+
+.brand-info {
+  max-width: 400px;
+}
+
+.footer-logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #4dd0e1, #26a69a);
+    border-radius: 2px;
+  }
+}
+
+.footer-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 20px 0 0 0;
+  font-weight: 400;
+}
+
+/* ==========================================
+   LINKS SECTION
+   ========================================== */
+.footer-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  padding-bottom: 12px;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: #4dd0e1;
+    border-radius: 2px;
+  }
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  li {
+    margin-bottom: 12px;
+    
+    a {
+      color: rgba(255, 255, 255, 0.75);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-block;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #4dd0e1;
+        transition: width 0.3s ease;
+      }
+      
+      &:hover {
+        transform: translateX(5px);
+        
+        &::before {
+          width: 100%;
+        }
       }
     }
   }
+}
 
-  // Accesibilidad - focus
-  .buscar-profesor:focus {
-    outline: 3px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
+/* ==========================================
+   SOCIAL SECTION
+   ========================================== */
+.social-icons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.social-btn {
+  --background: rgba(255, 255, 255, 0.1);
+  --color: #ffffff;
+  --border-radius: 12px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  height: 48px;
+  width: 48px;
+  margin: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  ion-icon {
+    font-size: 24px;
+  }
+  
+  &:active {
+    transform: translateY(-2px) scale(1);
+  }
+}
+
+.contact-mail {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &::before {
+    content: '✉';
+    font-size: 18px;
+    color: #4dd0e1;
+  }
+}
+
+/* ==========================================
+   DIVIDER
+   ========================================== */
+.footer-divider {
+  --background: rgba(255, 255, 255, 0.1);
+  --min-height: 1px;
+  margin: 40px 0 30px 0;
+  border: none;
+}
+
+/* ==========================================
+   BOTTOM SECTION
+   ========================================== */
+.bottom-row {
+  padding-top: 10px;
+}
+
+.copyright {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  margin: 0;
+  font-weight: 400;
+  
+  @media (max-width: 768px) {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+}
+
+.legal-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+  
+  a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      color: #4dd0e1;
+      text-decoration: underline;
+    }
+  }
+  
+  .separator {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 12px;
+  }
+}
+.seccion-profesores-materia {
+  padding: 24px 0 40px;
+  background: linear-gradient(180deg, #f0f9f9 0%, #ffffff 100%);
+  margin-top: 24px;
+  animation: slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Efecto de fondo sutil */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #0d4d4d, #4dd0e1, #0d4d4d);
+    background-size: 200% 100%;
   }
 
-  .seccion-titulo {
+  .btn-volver {
     color: #0d4d4d;
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 1rem 1rem 0.5rem;
+    --padding-start: 8px;
+    --padding-end: 16px;
+    font-size: 15px;
+    padding-left: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    transform: scale(3);
+  }
+}
+
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.95);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    max-height: 5000px;
+  }
+}
+
+
+
+.profesores-wrapper {
+  padding: 0 20px;
+}
+/* 📚 MATERIAS */
+.materias-section {
+  padding: 40px 20px;
+  background: white;
+}
+
+.materias-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.materia-chip {
+  background: linear-gradient(135deg, #0d4d4d, #1a6666);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(13, 77, 77, 0.2);
+}
+
+.materia-chip:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(13, 77, 77, 0.3);
+  background: linear-gradient(135deg, #1a6666, #26a69a);
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 1.8rem;
   }
 
-  .ranking-profesores {
-    padding: 0 1rem;
+  .hero-subtitle {
+    font-size: 1rem;
   }
 
-  .profe-card {
-    margin-bottom: 1rem;
-    border-left: 5px solid #0d4d4d;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  .hero-stats {
+    gap: 15px;
+  }
 
-    ion-card-title {
-      color: #0d4d4d;
-      font-weight: bold;
-    }
+  .stat-item {
+    padding: 10px 15px;
+  }
 
-    ion-card-subtitle {
-      color: #555;
-    }
+  .stat-number {
+    font-size: 1.5rem;
+  }
 
-    ion-card-content {
-      font-size: 0.9rem;
-      color: #333;
-    }
+  .cta-button {
+    padding: 15px 30px;
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .steps-container {
+    grid-template-columns: 1fr;
+  }
+
+  .profesores-scroll {
+    gap: 16px;
+    padding: 12px 16px 24px 16px;
+  }
+
+  .profe-card-large {
+    width: 250px;
+    min-width: 280px;
+  }
+
+  .image-container {
+    height: 190px;
+  }
+
+  .placeholder-letter {
+    font-size: 70px;
   }
 }

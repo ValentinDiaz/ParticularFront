@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { UsuariosService } from 'src/app/services/usuarios.service';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -14,18 +15,22 @@ import {
   AlertController,
   ToastController,
   LoadingController,
+  IonCard,
+  IonCardContent,
 } from '@ionic/angular/standalone';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { Usuario } from 'src/app/interfaces/usuario.interface';
 import { addIcons } from 'ionicons';
-import { 
-  createOutline, 
-  camera, 
-  callOutline, 
+import {
+  createOutline,
+  camera,
+  callOutline,
   mailOutline,
-  checkmarkCircleOutline 
+  checkmarkCircleOutline,
 } from 'ionicons/icons';
+import { Profesor } from 'src/app/interfaces/profesor.interface';
+import { extractErrorMessage } from 'src/app/shared/api-error.util';
 
 @Component({
   selector: 'app-perfil-usuario',
@@ -44,13 +49,20 @@ import {
     IonText,
     CommonModule,
     FormsModule,
+    IonCard,
+    IonCardContent,
   ],
 })
 export class PerfilUsuarioPage implements OnInit {
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
+
   usuario?: Usuario;
   usuarioOriginal?: Usuario;
   modoEdicion = signal(false);
   haycambios = false;
+  mostrarFavoritos = false;
+
+  favoritos: Profesor[] = [];
 
   // Estados de edición
   editandoNombre = false;
@@ -63,12 +75,13 @@ export class PerfilUsuarioPage implements OnInit {
     private authService: AuthService,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private UsuariosService: UsuariosService
   ) {
     // Registrar íconos
     addIcons({
       'create-outline': createOutline,
-      'camera': camera,
+      camera: camera,
       'call-outline': callOutline,
       'mail-outline': mailOutline,
       'checkmark-circle-outline': checkmarkCircleOutline,
@@ -77,21 +90,38 @@ export class PerfilUsuarioPage implements OnInit {
 
   ngOnInit() {
     this.cargarUsuario();
+    this.obtenerFavoritos();
+  }
+
+  obtenerFavoritos() {
+    if (!this.usuario) return;
+    this.UsuariosService.obtenerFavoritos(this.usuario.id).subscribe({
+      next: (favoritos) => {
+        console.log('Favoritos obtenidos:', favoritos);
+        this.favoritos = favoritos;
+      },
+      error: (error) => {
+        console.error('Error al obtener favoritos:', error);
+      },
+    });
   }
 
   cargarUsuario() {
     const id = this.route.snapshot.paramMap.get('id');
     const usuarioActual = this.authService.getUsuarioActual() as Usuario;
-      // Ver mi propio perfil
-      if (usuarioActual) {
-        this.usuario = { ...usuarioActual };
-        this.usuarioOriginal = JSON.parse(JSON.stringify(usuarioActual));
-        this.modoEdicion.set(true);
-      } else {
-        this.showToast('No hay usuario logueado', 'danger');
-        this.router.navigate(['/login']);
-      }
-    
+    // Ver mi propio perfil
+    if (usuarioActual) {
+      this.usuario = { ...usuarioActual };
+      this.usuarioOriginal = JSON.parse(JSON.stringify(usuarioActual));
+      this.modoEdicion.set(true);
+    } else {
+      this.showToast('No hay usuario logueado', 'danger');
+      this.router.navigate(['/login']);
+    }
+  }
+
+  obtenerNombresMaterias(profesor: Profesor): string {
+    return profesor.materias?.map((m) => m.nombre).join(', ') ?? '';
   }
 
   // Editar foto
@@ -210,7 +240,11 @@ export class PerfilUsuarioPage implements OnInit {
         {
           text: 'Cambiar',
           handler: async (data) => {
-            if (!data.passwordActual || !data.passwordNueva || !data.passwordConfirmar) {
+            if (
+              !data.passwordActual ||
+              !data.passwordNueva ||
+              !data.passwordConfirmar
+            ) {
               this.showToast('Completa todos los campos', 'warning');
               return false;
             }
@@ -221,7 +255,10 @@ export class PerfilUsuarioPage implements OnInit {
             }
 
             if (data.passwordNueva.length < 5) {
-              this.showToast('La contraseña debe tener al menos 5 caracteres', 'danger');
+              this.showToast(
+                'La contraseña debe tener al menos 5 caracteres',
+                'danger'
+              );
               return false;
             }
 
@@ -252,34 +289,51 @@ export class PerfilUsuarioPage implements OnInit {
     });
     await loading.present();
 
-    try {
-      // Preparar datos para enviar
-      const usuarioData = {
-        nombre: this.usuario.nombre,
-        apellido: this.usuario.apellido,
-        email: this.usuario.email,
-        telefono: this.usuario.telefono,
-        fotoPerfil: this.usuario.fotoPerfil,
-      };
+    const usuarioData = {
+      nombre: this.usuario.nombre,
+      apellido: this.usuario.apellido,
+      email: this.usuario.email,
+      telefono: this.usuario.telefono,
+      fotoPerfil: this.usuario.fotoPerfil,
+    };
 
-      // Aquí llamarías a tu servicio para actualizar el usuario
-      // await this.authService.actualizarUsuario(this.usuario.id, usuarioData).toPromise();
+    this.UsuariosService.actualizarUsuario(this.usuario.id, usuarioData).subscribe({
+      next: async (usuarioActualizado) => {
+        this.authService.setUsuario(usuarioActualizado);
 
-      // Actualizar el usuario en el servicio de auth
-      this.authService.setUsuario(this.usuario);
+        await loading.dismiss();
+        await this.showToast('Cambios guardados exitosamente', 'success');
 
-      await loading.dismiss();
-      await this.showToast('Cambios guardados exitosamente', 'success');
+        this.haycambios = false;
+        this.usuario = usuarioActualizado;
+        this.usuarioOriginal = JSON.parse(JSON.stringify(usuarioActualizado));
+      },
+      error: async (error) => {
+        await loading.dismiss();
+        await this.showToast(
+          extractErrorMessage(error, 'Error al guardar los cambios'),
+          'danger'
+        );
+      },
+    });
+  }
+  toggleFavoritos() {
+    this.mostrarFavoritos = !this.mostrarFavoritos;
 
-      this.haycambios = false;
-      this.usuarioOriginal = JSON.parse(JSON.stringify(this.usuario));
-      
-      // Recargar el usuario
-      this.cargarUsuario();
-    } catch (error) {
-      console.error('Error al guardar cambios:', error);
-      await loading.dismiss();
-      await this.showToast('Error al guardar los cambios', 'danger');
+    if (this.mostrarFavoritos) {
+      setTimeout(() => {
+        this.scrollToFavoritos();
+      }, 150); // espera a que renderice
+    }
+  }
+
+  scrollToFavoritos() {
+    const el = document.getElementById('favoritos-section');
+    if (el) {
+      el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
     }
   }
 
@@ -295,5 +349,10 @@ export class PerfilUsuarioPage implements OnInit {
       position: 'top',
     });
     await toast.present();
+  }
+
+  seleccionarProfesor(profesor: Profesor) {
+    this.router.navigate(['/perfil-profesor', profesor.id]);
+
   }
 }

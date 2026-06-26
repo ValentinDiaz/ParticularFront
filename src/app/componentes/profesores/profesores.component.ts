@@ -11,7 +11,7 @@ import {
   IonCol,
   IonCard,
   IonCardContent,
-  IonCardHeader, IonIcon, IonButton, IonChip, IonLabel, IonAvatar, IonBadge, IonCardTitle, IonCardSubtitle } from '@ionic/angular/standalone';
+  IonCardHeader, IonIcon, IonButton, IonChip, IonLabel, IonAvatar, IonBadge, IonCardTitle, IonCardSubtitle, IonSpinner } from '@ionic/angular/standalone';
 import { Materia } from 'src/app/interfaces/materia.interface';
 import { Profesor } from 'src/app/interfaces/profesor.interface';
 import { ProfesoresService } from 'src/app/services/profesores.service';
@@ -24,7 +24,7 @@ import { Router } from '@angular/router';
   templateUrl: './profesores.component.html',
   styleUrls: ['./profesores.component.scss'],
   standalone: true,
-  imports: [IonCardSubtitle, IonCardTitle, IonBadge, IonAvatar, IonLabel, IonChip, IonButton, IonIcon, IonCardHeader, IonCardContent, IonCard, IonCol, IonRow, IonGrid,CommonModule],
+  imports: [IonSpinner, IonCardSubtitle, IonCardTitle, IonBadge, IonAvatar, IonLabel, IonChip, IonButton, IonIcon, IonCardHeader, IonCardContent, IonCard, IonCol, IonRow, IonGrid,CommonModule],
 })
 export class ProfesoresComponent implements OnChanges {
 buscarOtraMateria() {
@@ -33,6 +33,7 @@ throw new Error('Method not implemented.');
   @Input() materiaSeleccionada: Materia | null = null;
   profesores: Profesor[] = [];
   cargandoProfesores = true;
+  loadingProfesores: boolean = true;
 
   constructor(private profesorService: ProfesoresService, private router:Router) {}
 
@@ -41,8 +42,11 @@ throw new Error('Method not implemented.');
       this.cargandoProfesores=true;
       this.profesorService
         .obtenerProfesorByMateria(this.materiaSeleccionada.id)
-        .subscribe((data) => (this.profesores = data));
-        this.cargandoProfesores=false;
+        .subscribe((data) => {
+          this.profesores = data.profesores;
+          this.cargandoProfesores = false;
+          this.loadingProfesores = false;
+        });
     }
   }
 

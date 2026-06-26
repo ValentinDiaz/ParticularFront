@@ -59,7 +59,7 @@
 
           <div class="form-group half">
             <label for="foto">Foto de Perfil</label>
-            <div class="file-upload-container">
+            <div class="file-upload-wrapper">
               <input
                 #fileInput
                 id="foto"
@@ -68,23 +68,28 @@
                 (change)="onFileSelected($event)"
                 style="display: none"
               />
+              
+              <!-- Botón para seleccionar archivo -->
               <button
                 type="button"
                 class="file-upload-button"
                 (click)="fileInput.click()"
+                [class.has-file]="selectedFileName"
               >
-                {{ selectedFileName || 'Seleccionar foto' }}
+                <ion-icon name="cloud-upload-outline"></ion-icon>
+                <span class="file-name">{{ selectedFileName || 'Seleccionar foto' }}</span>
               </button>
-              <ion-icon 
-                *ngIf="selectedFileName" 
-                name="checkmark-circle" 
-                color="success"
-                class="upload-icon"
-              ></ion-icon>
-            </div>
-            <!-- Preview de la imagen -->
-            <div *ngIf="photoPreview" class="photo-preview">
-              <img [src]="photoPreview" alt="Vista previa" />
+
+              <!-- Botón para remover archivo -->
+              <button
+                *ngIf="selectedFileName"
+                type="button"
+                class="remove-file-button"
+                (click)="removePhoto()"
+                title="Quitar foto"
+              >
+                <ion-icon name="close-circle"></ion-icon>
+              </button>
             </div>
           </div>
         </div>
@@ -132,21 +137,23 @@
             Debes seleccionar al menos una materia
           </small>
 
-          <!-- Chips para mostrar las materias seleccionadas -->
+          <!-- Chips para mostrar las materias seleccionadas con scroll -->
           <div
-            class="selected-materias"
+            class="selected-materias-container"
             *ngIf="getSelectedMaterias().length > 0"
           >
-            <ion-chip
-              *ngFor="let materia of getSelectedMaterias()"
-              color="primary"
-            >
-              <ion-label>{{ materia.nombre }}</ion-label>
-              <ion-icon
-                name="close-circle"
-                (click)="removeMateria(materia.id)"
-              ></ion-icon>
-            </ion-chip>
+            <div class="selected-materias">
+              <ion-chip
+                *ngFor="let materia of getSelectedMaterias()"
+                color="primary"
+              >
+                <ion-label>{{ materia.nombre }}</ion-label>
+                <ion-icon
+                  name="close-circle"
+                  (click)="removeMateria(materia.id)"
+                ></ion-icon>
+              </ion-chip>
+            </div>
           </div>
         </div>
 

@@ -1,32 +1,104 @@
 .nivel-card {
-  height: 180px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 2rem;
-  background: #0d4d4d; /* Turquesa */
-  color: white;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
+  border-radius: 20px;
+  background: linear-gradient(135deg, #0d4d4d 0%, #117070 100%);
+  box-shadow: 
+    0 4px 12px rgba(13, 77, 77, 0.2),
+    0 8px 24px rgba(13, 77, 77, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  margin: 0;
+  
   ion-card-content {
-    text-align: center;
-    padding: 20px;
-  }
-  p {
-    color: #0d4d4d;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
   }
 
   h3 {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.1rem;
+    font-weight: 600;
     color: white;
     margin: 0;
+    line-height: 1.3;
   }
 
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
+    transform: translateY(-4px);
+    box-shadow: 
+      0 6px 16px rgba(13, 77, 77, 0.25),
+      0 12px 32px rgba(13, 77, 77, 0.2);
+  }
+
+  &:active {
+    transform: translateY(-2px);
+  }
+}
+
+.nivel-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  ion-icon {
+    font-size: 24px;
+    color: white;
+  }
+}
+.mensaje-vacio{
+  color: #0d4d4d;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px; // O el alto que necesites
+  width: 100%;
+
+  ion-spinner {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+// Responsive adjustments
+@media (min-width: 576px) {
+  .nivel-card {
+    height: 160px;
+    
+    h3 {
+      font-size: 1.2rem;
+    }
+  }
+  
+  .nivel-icon {
+    width: 56px;
+    height: 56px;
+    
+    ion-icon {
+      font-size: 28px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .nivel-card {
+    height: 180px;
+    
+    h3 {
+      font-size: 1.3rem;
+    }
   }
 }

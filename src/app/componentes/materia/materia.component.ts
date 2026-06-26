@@ -16,15 +16,48 @@ import {
   IonRow,
   IonCard,
   IonCol,
-  IonCardContent,
-} from '@ionic/angular/standalone';
+  IonCardContent, IonIcon, IonSpinner } from '@ionic/angular/standalone';
+
+
+  import { addIcons } from 'ionicons';
+import {
+  add,
+  arrowBackOutline,
+  bagHandle,
+  bagHandleOutline,
+  bagHandleSharp,
+  documentLockOutline,
+  documentLockSharp,
+  homeOutline,
+  homeSharp,
+  informationCircleOutline,
+  informationCircleSharp,
+  keyOutline,
+  keySharp,
+  locationOutline,
+  locationSharp,
+  logInSharp,
+  logOutOutline,
+  logOutSharp,
+  personOutline,
+  personSharp,
+  remove,
+  schoolOutline,
+  schoolSharp,
+  ticketOutline,
+  trashOutline,
+  searchOutline,
+  chatbubblesOutline,
+  chatbubblesSharp,
+  starOutline,
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-materia',
   templateUrl: './materia.component.html',
   styleUrls: ['./materia.component.scss'],
   standalone: true,
-  imports: [IonCardContent, IonCol, IonCard, IonRow, IonGrid],
+  imports: [IonSpinner, IonIcon, IonCardContent, IonCol, IonCard, IonRow, IonGrid],
 })
 export class MateriaComponent implements OnChanges {
   @Input() areaSeleccionada: Area | null = null;
@@ -32,10 +65,13 @@ export class MateriaComponent implements OnChanges {
   @Output() materiaSeleccionadaChange: EventEmitter<Materia> =
     new EventEmitter<Materia>();
   @Input() materiaSeleccionada: Materia | null = null;
+  loadingMaterias: boolean = true;
 
   materias: Materia[] = [];
 
-  constructor(private materiaService: MateriasService) {}
+  constructor(private materiaService: MateriasService) {
+    this.addAllIcons();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -49,7 +85,10 @@ export class MateriaComponent implements OnChanges {
           this.areaSeleccionada.id,
           this.nivelSeleccionado.id
         )
-        .subscribe((data) => (this.materias = data));
+        .subscribe((data) => {
+          this.materias = data;
+          this.loadingMaterias = false;
+        });
     }
   }
 
@@ -57,4 +96,39 @@ export class MateriaComponent implements OnChanges {
     this.materiaSeleccionada = materia;
     this.materiaSeleccionadaChange.emit(this.materiaSeleccionada);
   }
+
+
+    addAllIcons() {
+      addIcons({
+        bagHandleOutline,
+        bagHandle,
+        bagHandleSharp,
+        trashOutline,
+        add,
+        remove,
+        arrowBackOutline,
+        ticketOutline,
+        locationOutline,
+        homeOutline,
+        homeSharp,
+        informationCircleOutline,
+        informationCircleSharp,
+        documentLockOutline,
+        documentLockSharp,
+        logOutOutline,
+        logOutSharp,
+        personOutline,
+        personSharp,
+        locationSharp,
+        keyOutline,
+        keySharp,
+        logInSharp,
+        schoolOutline,
+        schoolSharp,
+        chatbubblesOutline,
+        chatbubblesSharp,
+        searchOutline,
+        starOutline,
+      });
+    }
 }
